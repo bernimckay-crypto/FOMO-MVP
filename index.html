@@ -1,0 +1,1481 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>FOMO — Encuentra tu comunidad</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--p:#6C47FF;--pd:#3D2099;--pl:#EDE8FF;--pm:#A78BFA;--w:#fff;--bg:#F8F6FF;--tx:#1A1033;--mu:#6B7280;--bd:#E5E0FF;--g:#10B981;--amb:#F59E0B;--red:#EF4444}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;overflow-x:hidden}
+h1,h2,h3,h4{font-family:'Syne',sans-serif}
+
+/* ===== SCREENS ===== */
+.scr{display:none;min-height:100vh;animation:fin .35s ease}
+.scr.on{display:flex;flex-direction:column}
+@keyframes fin{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:none}}
+
+/* ===== ONBOARDING SHELL ===== */
+.ob-shell{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem;background:var(--w)}
+.ob-card{width:100%;max-width:480px}
+.ob-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:2.2rem;color:var(--p);text-align:center;margin-bottom:.3rem}
+.ob-sub{text-align:center;color:var(--mu);font-size:.95rem;line-height:1.5;margin-bottom:2rem}
+.ob-prog{display:flex;gap:5px;margin-bottom:2rem}
+.op{height:3px;border-radius:2px;background:var(--bd);flex:1;transition:background .3s}
+.op.on{background:var(--p)}
+.ob-label{font-size:11px;font-weight:600;color:var(--pm);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.5rem}
+.ob-q{font-family:'Syne',sans-serif;font-weight:700;font-size:1.4rem;color:var(--tx);margin-bottom:1.3rem;line-height:1.2}
+.ob-desc{font-size:13px;color:var(--mu);margin-bottom:1.5rem;line-height:1.6}
+
+/* inputs */
+.fi{width:100%;padding:12px 15px;border:1.5px solid var(--bd);border-radius:10px;font-family:'Inter',sans-serif;font-size:14px;color:var(--tx);background:var(--w);outline:none;transition:border .15s;margin-bottom:11px}
+.fi:focus{border-color:var(--p)}
+.fi-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.fi-label{font-size:11px;font-weight:600;color:var(--mu);text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:4px}
+.fg{margin-bottom:11px}
+.fg .fi{margin-bottom:0}
+
+/* option pills */
+.opts{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:1.5rem}
+.opt{padding:9px 16px;border:1.5px solid var(--bd);border-radius:24px;background:var(--w);cursor:pointer;font-size:13px;font-weight:500;color:var(--tx);transition:all .15s;display:flex;align-items:center;gap:6px}
+.opt:hover{border-color:var(--p);color:var(--p)}
+.opt.on{border-color:var(--p);background:var(--p);color:#fff}
+.opts-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:1.5rem}
+.opt-card{padding:14px;border:1.5px solid var(--bd);border-radius:12px;background:var(--w);cursor:pointer;font-size:13px;font-weight:500;color:var(--tx);transition:all .15s;text-align:left}
+.opt-card:hover{border-color:var(--p);background:var(--pl)}
+.opt-card.on{border-color:var(--p);background:var(--pl);color:var(--pd)}
+.opt-card .oc-icon{font-size:1.8rem;margin-bottom:.5rem;display:block}
+.opt-card .oc-title{font-family:'Syne',sans-serif;font-weight:700;font-size:.95rem;margin-bottom:.2rem}
+.opt-card .oc-desc{font-size:12px;color:var(--mu)}
+
+/* buttons */
+.btn{padding:12px 24px;border-radius:10px;font-family:'Inter',sans-serif;font-weight:600;font-size:14px;cursor:pointer;border:none;transition:all .15s;display:inline-flex;align-items:center;gap:6px}
+.btn-p{background:var(--p);color:#fff}.btn-p:hover{background:var(--pd)}
+.btn-g{background:transparent;color:var(--p);border:1.5px solid var(--bd)}.btn-g:hover{border-color:var(--p);background:var(--pl)}
+.btn-full{width:100%;justify-content:center}
+.btn-sm{padding:7px 15px;font-size:12px;border-radius:8px}
+.ob-nav{display:flex;gap:10px;justify-content:flex-end;margin-top:.5rem}
+.ob-nav.spread{justify-content:space-between}
+
+/* budget slider */
+.slider-wrap{margin-bottom:1.5rem}
+.slider-lbl{display:flex;justify-content:space-between;font-size:12px;color:var(--mu);margin-bottom:.4rem}
+.slider-val{font-family:'Syne',sans-serif;font-weight:700;color:var(--p);font-size:1rem}
+input[type=range]{width:100%;-webkit-appearance:none;height:4px;background:var(--bd);border-radius:2px;outline:none}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--p);cursor:pointer}
+
+/* ===== WELCOME ===== */
+#s-welcome{background:linear-gradient(160deg,#3D2099 0%,#6C47FF 55%,#A78BFA 100%)}
+.wl-inner{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem;text-align:center;color:#fff}
+.wl-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:3.5rem;margin-bottom:.4rem}
+.wl-tagline{font-size:1.2rem;opacity:.85;margin-bottom:.5rem;max-width:380px;line-height:1.4}
+.wl-sub{font-size:.9rem;opacity:.65;margin-bottom:3rem;max-width:320px}
+.wl-dots{display:flex;gap:6px;justify-content:center;margin-bottom:2.5rem}
+.wl-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.4)}
+.wl-dot.on{background:#fff;width:18px;border-radius:3px}
+.btn-wl{background:#fff;color:var(--p);padding:14px 36px;border-radius:12px;font-weight:700;font-size:15px;border:none;cursor:pointer;font-family:'Syne',sans-serif;transition:transform .15s}
+.btn-wl:hover{transform:scale(1.03)}
+.wl-login{color:rgba(255,255,255,.65);font-size:13px;margin-top:1rem;cursor:pointer}
+.wl-login:hover{color:#fff}
+.wl-imgs{display:flex;gap:12px;justify-content:center;margin-bottom:2rem}
+.wl-img{width:70px;height:70px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:2rem;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.2)}
+
+/* ===== LOADING ===== */
+#s-loading{background:var(--pl);align-items:center;justify-content:center}
+.load-inner{text-align:center}
+.load-spinner{width:56px;height:56px;border:4px solid var(--bd);border-top-color:var(--p);border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 1.5rem}
+@keyframes spin{to{transform:rotate(360deg)}}
+.load-title{font-family:'Syne',sans-serif;font-weight:700;font-size:1.3rem;color:var(--pd);margin-bottom:.5rem}
+.load-steps{display:flex;flex-direction:column;gap:6px;margin-top:1.5rem;text-align:left}
+.ls{font-size:13px;color:var(--mu);display:flex;align-items:center;gap:8px;opacity:0;transition:opacity .5s}
+.ls.on{opacity:1}
+.ls-dot{width:6px;height:6px;border-radius:50%;background:var(--g);flex-shrink:0}
+
+/* ===== NAV APP ===== */
+#app-nav{background:var(--w);border-bottom:1px solid var(--bd);padding:0 1.5rem;height:56px;display:none;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:300}
+.nav-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.3rem;color:var(--p);cursor:pointer}
+.nav-right{display:flex;gap:8px;align-items:center}
+.ntab{padding:5px 13px;border-radius:20px;font-size:12px;font-weight:500;cursor:pointer;border:none;background:transparent;color:var(--mu);transition:all .15s}
+.ntab:hover{color:var(--p)}
+.ntab.on{background:var(--pl);color:var(--pd)}
+.nav-avatar{width:32px;height:32px;border-radius:50%;background:var(--p);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;cursor:pointer;flex-shrink:0}
+
+/* ===== HOME USER ===== */
+#s-home{flex-direction:column}
+.hero-u{background:linear-gradient(135deg,#3D2099,#6C47FF 60%,#A78BFA);padding:2.5rem 1.5rem 2rem;color:#fff}
+.hero-greet{font-size:.85rem;opacity:.75;margin-bottom:.3rem}
+.hero-title{font-family:'Syne',sans-serif;font-weight:800;font-size:1.9rem;line-height:1.15;margin-bottom:.8rem}
+.hero-stats{display:flex;gap:1.5rem}
+.hstat strong{display:block;font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:700}
+.hstat span{font-size:11px;opacity:.7}
+.rec-section{padding:1.2rem 1.5rem;border-bottom:1px solid var(--bd);background:var(--w)}
+.sec-title{font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;color:var(--tx);margin-bottom:.9rem;display:flex;align-items:center;gap:6px}
+.rec-scroll{display:flex;gap:12px;overflow-x:auto;padding-bottom:4px}
+.rec-card{flex-shrink:0;width:190px;background:var(--bg);border:1px solid var(--bd);border-radius:12px;overflow:hidden;cursor:pointer;transition:transform .15s}
+.rec-card:hover{transform:translateY(-2px)}
+.rc-img{height:100px;display:flex;align-items:center;justify-content:center;font-size:2.5rem;position:relative}
+.rc-body{padding:.7rem}
+.rc-name{font-family:'Syne',sans-serif;font-weight:700;font-size:.8rem;margin-bottom:2px}
+.rc-meta{font-size:11px;color:var(--mu)}
+.rc-price{font-weight:700;color:var(--p);font-size:.85rem;margin-top:4px}
+/* FILTERS */
+.fbar{background:var(--w);border-bottom:1px solid var(--bd);padding:.6rem 1.5rem;display:flex;gap:7px;overflow-x:auto;align-items:center;position:sticky;top:56px;z-index:200}
+.chip{padding:6px 14px;border-radius:20px;font-size:12px;font-weight:500;cursor:pointer;border:1.5px solid var(--bd);background:var(--w);color:var(--mu);white-space:nowrap;transition:all .15s}
+.chip:hover{border-color:var(--p);color:var(--p)}
+.chip.on{background:var(--p);color:#fff;border-color:var(--p)}
+.adv-btn{font-size:12px;padding:5px 10px;border:1.5px solid var(--bd);border-radius:6px;background:var(--w);color:var(--p);cursor:pointer;white-space:nowrap;margin-left:auto}
+.adv-panel{background:var(--w);border-bottom:1px solid var(--bd);padding:.9rem 1.5rem;display:none;flex-wrap:wrap;gap:12px}
+.adv-panel.on{display:flex}
+.af label{font-size:11px;font-weight:600;color:var(--mu);text-transform:uppercase;display:block;margin-bottom:3px}
+.af select{padding:6px 10px;border:1.5px solid var(--bd);border-radius:7px;font-family:'Inter',sans-serif;font-size:12px;color:var(--tx);background:var(--w);outline:none}
+/* CATALOG */
+.cat-wrap{padding:1.2rem 1.5rem;max-width:1100px;margin:0 auto;width:100%}
+.cat-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:.9rem}
+.cat-count{font-size:12px;color:var(--mu)}
+.cat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.1rem}
+.ac{background:var(--w);border:1px solid var(--bd);border-radius:13px;overflow:hidden;cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative}
+.ac:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(108,71,255,.13)}
+.fav-btn{position:absolute;top:9px;right:9px;background:rgba(255,255,255,.9);border:none;border-radius:50%;width:30px;height:30px;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:2}
+.ac-img{height:160px;display:flex;align-items:center;justify-content:center;font-size:3rem;position:relative}
+.ac-bads{position:absolute;top:8px;left:8px;display:flex;gap:4px;flex-wrap:wrap}
+.bd{padding:2px 8px;border-radius:9px;font-size:10px;font-weight:600}
+.bd-free{background:#D1FAE5;color:#065F46}
+.bd-cat{background:var(--pl);color:var(--pd)}
+.bd-mod{background:#FEF3C7;color:#92400E}
+.ac-body{padding:.9rem}
+.ac-name{font-family:'Syne',sans-serif;font-weight:700;font-size:.9rem;margin-bottom:2px}
+.ac-org{font-size:11px;color:var(--mu);margin-bottom:7px}
+.ac-metas{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+.meta{font-size:10px;color:var(--mu)}
+.ac-foot{display:flex;align-items:center;justify-content:space-between;padding-top:8px;border-top:1px solid var(--bd)}
+.price{font-family:'Syne',sans-serif;font-weight:700;font-size:.95rem;color:var(--p)}
+.stars{color:#FBBF24;font-size:11px}
+.cupos-lbl{font-size:10px;color:var(--g);font-weight:600}
+/* MODAL */
+.overlay{position:fixed;inset:0;background:rgba(20,10,40,.6);z-index:600;display:flex;align-items:flex-start;justify-content:center;padding:1rem;overflow-y:auto;backdrop-filter:blur(4px)}
+.modal{background:var(--w);border-radius:18px;max-width:700px;width:100%;margin:auto}
+.mh{position:relative}
+.m-img{height:210px;display:flex;align-items:center;justify-content:center;font-size:5rem;border-radius:18px 18px 0 0}
+.m-close{position:absolute;top:10px;right:10px;background:rgba(255,255,255,.92);border:none;border-radius:50%;width:32px;height:32px;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.m-body{padding:1.3rem}
+.m-title{font-size:1.4rem;font-weight:800;margin-bottom:.4rem}
+.m-bads{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1rem}
+.m-bads .bd{font-size:11px;padding:4px 10px}
+.msec{margin-bottom:1rem}
+.msec h4{font-size:.75rem;font-weight:600;color:var(--p);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.4rem}
+.msec p{font-size:13px;line-height:1.7;color:var(--mu)}
+.hor-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.hc{background:var(--pl);border-radius:7px;padding:7px 10px;font-size:12px;color:var(--pd);font-weight:500}
+.ben-list{display:flex;flex-direction:column;gap:5px}
+.ben-item{font-size:13px;color:var(--mu);display:flex;gap:7px}
+.ben-item::before{content:"✓";color:var(--g);font-weight:700;flex-shrink:0}
+.gal{display:flex;gap:7px;overflow-x:auto;padding-bottom:3px}
+.gi{width:75px;height:56px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:1.7rem;flex-shrink:0}
+.org-blk{display:flex;gap:11px;background:var(--bg);border-radius:10px;padding:12px}
+.org-av{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;background:var(--pl)}
+.org-links{display:flex;gap:6px;flex-wrap:wrap;margin-top:7px}
+.ol{font-size:11px;padding:3px 9px;border-radius:5px;background:var(--pl);color:var(--pd);font-weight:600;cursor:pointer;border:none}
+.info-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:1rem}
+.ir{text-align:center;background:var(--bg);border-radius:8px;padding:9px}
+.ir strong{display:block;font-family:'Syne',sans-serif;font-weight:700;font-size:.9rem}
+.ir span{font-size:10px;color:var(--mu)}
+.map-ph{background:linear-gradient(135deg,var(--pl),var(--bd));border-radius:9px;height:100px;display:flex;align-items:center;justify-content:center;font-size:2rem;color:var(--pm)}
+.mfoot{border-top:1px solid var(--bd);padding-top:1rem;display:flex;align-items:center;gap:10px}
+.mprice{font-size:1.6rem;font-weight:800;font-family:'Syne',sans-serif;color:var(--p)}
+.btn-enroll{flex:1;padding:12px;font-size:14px;font-weight:600;border-radius:9px;background:var(--p);color:#fff;border:none;cursor:pointer;font-family:'Syne',sans-serif}
+.btn-enroll:hover{background:var(--pd)}
+/* REVIEWS in modal */
+.rev-list{display:flex;flex-direction:column;gap:8px}
+.rev{background:var(--bg);border-radius:9px;padding:10px}
+.rev-top{display:flex;align-items:center;gap:8px;margin-bottom:5px}
+.rev-av{width:30px;height:30px;border-radius:50%;background:var(--pl);display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0}
+.rev-name{font-weight:600;font-size:12px}
+.rev-txt{font-size:12px;color:var(--mu);line-height:1.5}
+/* TESTIMONIOS */
+.test-sec{background:var(--w);padding:2rem 1.5rem;border-top:1px solid var(--bd)}
+.test-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1rem;max-width:1000px;margin:1rem auto 0}
+.tc{background:var(--bg);border:1px solid var(--bd);border-radius:12px;padding:1rem}
+.tc-top{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.tc-av{width:36px;height:36px;border-radius:50%;background:var(--pl);display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
+.tc-nm{font-weight:600;font-size:12px}.tc-ac{font-size:11px;color:var(--mu)}
+.tc-txt{font-size:12px;line-height:1.6;color:var(--mu);margin-bottom:8px}
+.btn-cu{font-size:11px;padding:5px 11px;border:1.5px solid var(--bd);border-radius:6px;background:var(--w);color:var(--p);font-weight:600;cursor:pointer;width:100%}
+.btn-cu:hover{background:var(--pl);border-color:var(--p)}
+.umsg{margin-top:7px;display:none}
+.umsg.on{display:block}
+.umsg textarea{width:100%;border:1.5px solid var(--bd);border-radius:7px;padding:7px;font-family:'Inter',sans-serif;font-size:12px;resize:none;height:56px;outline:none}
+.umsg textarea:focus{border-color:var(--p)}
+.umsg button{margin-top:4px;width:100%;padding:7px;background:var(--p);color:#fff;border:none;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer}
+/* FAVS / MAP sections */
+.sec-wrap{padding:1.2rem 1.5rem;max-width:1100px;margin:0 auto;width:100%}
+.empty-st{text-align:center;padding:3rem;color:var(--mu)}
+.empty-st .big{font-size:3rem;margin-bottom:.7rem}
+.map-big{background:linear-gradient(135deg,#3D2099,#6C47FF);border-radius:15px;height:320px;position:relative;overflow:hidden;cursor:default}
+.map-pins{position:absolute;inset:0}
+.pin{position:absolute;background:var(--w);border-radius:50%;width:34px;height:34px;display:flex;align-items:center;justify-content:center;font-size:.95rem;cursor:pointer;border:2px solid var(--p);transition:transform .15s;box-shadow:0 2px 8px rgba(0,0,0,.2)}
+.pin:hover{transform:scale(1.2)}
+.pin-lbl{position:absolute;bottom:38px;left:50%;transform:translateX(-50%);background:var(--tx);color:#fff;font-size:10px;padding:3px 7px;border-radius:5px;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .15s}
+.pin:hover .pin-lbl{opacity:1}
+.map-leg{position:absolute;bottom:10px;left:10px;background:rgba(255,255,255,.95);border-radius:8px;padding:6px 10px;font-size:11px}
+/* ENROLL MODAL */
+.en-box{background:var(--w);border-radius:16px;max-width:430px;width:100%;padding:1.7rem;margin:auto}
+.en-box h3{font-size:1.15rem;margin-bottom:.3rem}
+.en-box p{font-size:13px;color:var(--mu);margin-bottom:1rem}
+.fg2r{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.ok-msg{background:#D1FAE5;border:1px solid #6EE7B7;border-radius:9px;padding:.8rem;text-align:center;color:#065F46;font-size:13px;margin-top:.9rem;display:none}
+/* CHATBOT */
+.cfab{position:fixed;bottom:20px;right:20px;z-index:400;background:var(--p);color:#fff;width:50px;height:50px;border-radius:50%;border:none;font-size:20px;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(108,71,255,.4)}
+.cfab.on{display:flex}
+.cpanel{position:fixed;bottom:78px;right:20px;z-index:400;width:310px;background:var(--w);border-radius:14px;border:1px solid var(--bd);box-shadow:0 6px 28px rgba(108,71,255,.15);display:none;flex-direction:column;max-height:420px}
+.cpanel.vis{display:flex}
+.ch{background:var(--p);color:#fff;padding:11px 13px;border-radius:14px 14px 0 0;display:flex;align-items:center;gap:8px}
+.ch h4{font-size:.85rem;flex:1;font-family:'Syne',sans-serif;font-weight:700}
+.chx{background:none;border:none;color:#fff;font-size:15px;cursor:pointer}
+.cmsgs{flex:1;overflow-y:auto;padding:11px;display:flex;flex-direction:column;gap:6px;min-height:160px}
+.cm{max-width:83%;padding:7px 10px;border-radius:10px;font-size:12px;line-height:1.5}
+.cm.bot{background:var(--pl);color:var(--pd);align-self:flex-start;border-radius:3px 10px 10px 10px}
+.cm.user{background:var(--p);color:#fff;align-self:flex-end;border-radius:10px 3px 10px 10px}
+.cm.typ{color:var(--mu);font-style:italic}
+.cinp{display:flex;gap:6px;padding:8px;border-top:1px solid var(--bd)}
+.cinp input{flex:1;border:1.5px solid var(--bd);border-radius:7px;padding:7px 9px;font-size:12px;font-family:'Inter',sans-serif;outline:none}
+.cinp input:focus{border-color:var(--p)}
+.cinp button{background:var(--p);color:#fff;border:none;border-radius:7px;padding:7px 10px;cursor:pointer}
+/* ORG SCREENS */
+#s-org{flex-direction:column}
+.org-nav{display:flex;gap:3px;overflow-x:auto;padding:.6rem 1.5rem;background:var(--w);border-bottom:1px solid var(--bd);position:sticky;top:56px;z-index:200}
+.ot{padding:7px 14px;border-radius:20px;font-size:12px;font-weight:500;cursor:pointer;border:none;background:transparent;color:var(--mu);transition:all .15s;white-space:nowrap}
+.ot.on{background:var(--p);color:#fff}
+.org-content{flex:1;padding:1.2rem 1.5rem;max-width:1100px;margin:0 auto;width:100%}
+.ot-pane{display:none}
+.ot-pane.on{display:block}
+.kpi-g{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:10px;margin-bottom:1.2rem}
+.kc{background:var(--w);border:1px solid var(--bd);border-radius:11px;padding:.9rem}
+.kc-l{font-size:10px;color:var(--mu);font-weight:600;text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px}
+.kc-v{font-family:'Syne',sans-serif;font-weight:700;font-size:1.4rem}
+.kc-s{font-size:11px;color:var(--g);margin-top:2px}
+.scard{background:var(--w);border:1px solid var(--bd);border-radius:11px;padding:1rem;margin-bottom:1rem}
+.scard h3{font-family:'Syne',sans-serif;font-weight:600;font-size:.9rem;margin-bottom:.8rem;display:flex;align-items:center;gap:6px}
+table.dt{width:100%;font-size:12px;border-collapse:collapse}
+.dt th{text-align:left;padding:7px 9px;background:var(--bg);color:var(--mu);font-weight:600;font-size:10px;text-transform:uppercase;border-bottom:1px solid var(--bd)}
+.dt td{padding:9px;border-bottom:1px solid var(--bd);color:var(--tx);vertical-align:middle}
+.dt tr:last-child td{border-bottom:none}
+.sb{padding:2px 8px;border-radius:8px;font-size:10px;font-weight:600}
+.sg{background:#D1FAE5;color:#065F46}.sy{background:#FEF3C7;color:#92400E}.sr{background:#FEE2E2;color:#991B1B}
+/* ADMIN */
+#s-admin{flex-direction:column}
+.adm-hd{background:var(--pd);color:#fff;padding:.9rem 1.5rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.adm-hd h2{font-size:1rem;display:flex;align-items:center;gap:7px}
+.adm-badge{font-size:10px;background:rgba(255,255,255,.2);padding:2px 8px;border-radius:5px}
+.adm-tabs{display:flex;gap:3px;overflow-x:auto;padding:.6rem 1.5rem;background:var(--w);border-bottom:1px solid var(--bd);position:sticky;top:56px;z-index:200}
+.at{padding:6px 13px;border-radius:20px;font-size:12px;font-weight:500;cursor:pointer;border:none;background:transparent;color:var(--mu);white-space:nowrap}
+.at.on{background:var(--p);color:#fff}
+.adm-content{flex:1;padding:1.2rem 1.5rem;max-width:1200px;margin:0 auto;width:100%}
+.at-pane{display:none}
+.at-pane.on{display:block}
+.adm-kpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:9px;margin-bottom:1.1rem}
+.akc{background:var(--w);border:1px solid var(--bd);border-radius:10px;padding:.85rem}
+.ak-l{font-size:10px;color:var(--mu);font-weight:600;text-transform:uppercase;margin-bottom:2px}
+.ak-v{font-family:'Syne',sans-serif;font-weight:700;font-size:1.3rem}
+.ak-s{font-size:11px;color:var(--g);margin-top:2px}
+.funnel-g{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-bottom:1rem}
+.fs{background:var(--w);border:1px solid var(--bd);border-radius:10px;padding:.85rem;text-align:center}
+.fn{font-family:'Syne',sans-serif;font-weight:700;font-size:1.5rem;color:var(--p)}
+.fl{font-size:11px;color:var(--mu);margin-top:3px}
+.fr{font-size:11px;color:var(--g);font-weight:600;margin-top:2px}
+.ev-feed{display:flex;flex-direction:column;gap:6px;max-height:260px;overflow-y:auto}
+.ev{display:flex;align-items:center;gap:9px;padding:7px 9px;background:var(--bg);border-radius:7px;font-size:11px}
+.ev-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.dg{background:var(--g)}.dp{background:var(--p)}.dc{background:var(--amb)}
+/* TOAST */
+.toast{position:fixed;bottom:76px;left:50%;transform:translateX(-50%);background:var(--tx);color:#fff;padding:8px 16px;border-radius:8px;font-size:13px;z-index:700;display:none;white-space:nowrap}
+/* FOOTER */
+footer{background:var(--pd);color:rgba(255,255,255,.6);text-align:center;padding:1rem;font-size:12px}
+footer strong{color:#fff}
+.adm-trig{color:rgba(255,255,255,.25);font-size:11px;cursor:pointer;user-select:none;text-decoration:none;margin-left:4px;transition:color .2s}
+.adm-trig:hover{color:rgba(255,255,255,.7)}
+/* RESPONSIVE */
+@media(max-width:580px){
+.cat-grid{grid-template-columns:1fr}
+.fi-row,.fg2r{grid-template-columns:1fr}
+.funnel-g{grid-template-columns:1fr 1fr}
+.info-row{grid-template-columns:1fr 1fr}
+.hero-title{font-size:1.5rem}
+.opts-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- ===== NAV ===== -->
+<nav id="app-nav">
+  <div class="nav-logo" onclick="goHome()">FOMO.</div>
+  <div class="nav-right" id="nav-user-r" style="display:none">
+    <button class="ntab on" onclick="userTab('cat')">Explorar</button>
+    <button class="ntab" onclick="userTab('favs')">❤️ Favoritos</button>
+    <button class="ntab" onclick="userTab('map')">🗺 Mapa</button>
+    <button class="ntab" onclick="userTab('tests')">Testimonios</button>
+    <div class="nav-avatar" id="nav-av" title="Perfil">U</div>
+  </div>
+  <div class="nav-right" id="nav-org-r" style="display:none">
+    <button class="ntab on" onclick="orgTab('dash')">Dashboard</button>
+    <button class="ntab" onclick="orgTab('acts')">Actividades</button>
+    <button class="ntab" onclick="orgTab('inscritos')">Inscritos</button>
+    <button class="ntab" onclick="orgTab('pagos')">Pagos</button>
+    <button class="ntab" onclick="orgTab('msgs')">Mensajes</button>
+    <button class="ntab" onclick="orgTab('metricas')">Métricas</button>
+    <div class="nav-avatar" style="background:var(--g)">O</div>
+  </div>
+  <div class="nav-right" id="nav-adm-r" style="display:none">
+    <button class="btn btn-sm" style="background:rgba(255,255,255,.1);color:var(--pm);border:none;border-radius:6px;padding:5px 12px;cursor:pointer;font-size:12px" onclick="goHome()">← Salir</button>
+  </div>
+</nav>
+
+<!-- ===== SCREEN 1: WELCOME ===== -->
+<div id="s-welcome" class="scr on">
+  <div class="wl-inner">
+    <div class="wl-logo">FOMO.</div>
+    <div class="wl-tagline">Descubre actividades, talleres y comunidades que realmente te interesen.</div>
+    <div class="wl-sub">Tu próxima experiencia favorita está a un clic de distancia.</div>
+    <div class="wl-imgs">
+      <div class="wl-img">🧘</div>
+      <div class="wl-img">🎨</div>
+      <div class="wl-img">🏋️</div>
+      <div class="wl-img">💃</div>
+      <div class="wl-img">🏔️</div>
+    </div>
+    <button class="btn-wl" onclick="go('s-role')">Comenzar</button>
+    <div class="wl-login" onclick="go('s-role')">¿Ya tienes cuenta? Ingresar →</div>
+    <div style="margin-top:2rem;font-size:11px;color:rgba(255,255,255,.22);cursor:pointer" onclick="launchAdmin()">⚙ Acceso administrador</div>
+  </div>
+</div>
+
+<!-- ===== SCREEN 2: ROLE ===== -->
+<div id="s-role" class="scr">
+  <div class="ob-shell">
+    <div class="ob-card">
+      <div class="ob-prog"><div class="op on"></div><div class="op"></div><div class="op"></div><div class="op"></div><div class="op"></div></div>
+      <div class="ob-label">Crear perfil · Paso 1 de 5</div>
+      <div class="ob-q">¿Cómo quieres usar FOMO?</div>
+      <div class="ob-desc">Selecciona tu rol para personalizar tu experiencia desde el inicio.</div>
+      <div class="opts-grid">
+        <div class="opt-card" id="rc-user" onclick="selRole('user')">
+          <span class="oc-icon">👤</span>
+          <div class="oc-title">Usuario</div>
+          <div class="oc-desc">Quiero descubrir actividades y comunidades.</div>
+        </div>
+        <div class="opt-card" id="rc-org" onclick="selRole('org')">
+          <span class="oc-icon">🏢</span>
+          <div class="oc-title">Organizador</div>
+          <div class="oc-desc">Quiero publicar y gestionar mis actividades.</div>
+        </div>
+      </div>
+      <div class="ob-nav"><button class="btn btn-p btn-full" onclick="nextRole()">Continuar →</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== USER ONBOARDING 3A: DATOS ===== -->
+<div id="s-u1" class="scr">
+  <div class="ob-shell">
+    <div class="ob-card">
+      <div class="ob-prog"><div class="op on"></div><div class="op on"></div><div class="op"></div><div class="op"></div><div class="op"></div></div>
+      <div class="ob-label">Perfil usuario · Paso 2 de 5</div>
+      <div class="ob-q">Cuéntanos sobre ti</div>
+      <div class="fi-row">
+        <div class="fg"><label class="fi-label">Nombre</label><input class="fi" id="u-name" type="text" placeholder="Tu nombre"></div>
+        <div class="fg"><label class="fi-label">Edad</label><input class="fi" id="u-edad" type="number" placeholder="25"></div>
+      </div>
+      <div class="fg"><label class="fi-label">Comuna o sector</label><input class="fi" id="u-zona" type="text" placeholder="Providencia, Las Condes..."></div>
+      <div class="fg"><label class="fi-label">Correo electrónico</label><input class="fi" id="u-mail" type="email" placeholder="tu@email.com"></div>
+      <div class="fg"><label class="fi-label">WhatsApp</label><input class="fi" id="u-wa" type="tel" placeholder="+56 9 XXXX XXXX"></div>
+      <div class="ob-nav spread">
+        <button class="btn btn-g" onclick="go('s-role')">← Volver</button>
+        <button class="btn btn-p" onclick="nextU1()">Continuar →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== USER ONBOARDING 4A: INTERESES ===== -->
+<div id="s-u2" class="scr">
+  <div class="ob-shell">
+    <div class="ob-card">
+      <div class="ob-prog"><div class="op on"></div><div class="op on"></div><div class="op on"></div><div class="op"></div><div class="op"></div></div>
+      <div class="ob-label">Intereses · Paso 3 de 5</div>
+      <div class="ob-q">¿Qué actividades te interesan?</div>
+      <div class="ob-desc">Selecciona todo lo que te llame la atención. Puedes elegir más de uno.</div>
+      <div class="opts" id="interest-opts">
+        <button class="opt" onclick="togInt(this,'deporte')">🏋️ Deportes</button>
+        <button class="opt" onclick="togInt(this,'arte')">🎨 Arte</button>
+        <button class="opt" onclick="togInt(this,'musica')">🎵 Música</button>
+        <button class="opt" onclick="togInt(this,'bienestar')">🧘 Bienestar</button>
+        <button class="opt" onclick="togInt(this,'outdoor')">🏔️ Outdoor</button>
+        <button class="opt" onclick="togInt(this,'foto')">📷 Fotografía</button>
+        <button class="opt" onclick="togInt(this,'idiomas')">🗣 Idiomas</button>
+        <button class="opt" onclick="togInt(this,'tech')">💻 Tecnología</button>
+        <button class="opt" onclick="togInt(this,'cocina')">🍳 Cocina</button>
+        <button class="opt" onclick="togInt(this,'social')">🎉 Networking</button>
+      </div>
+      <div class="ob-nav spread">
+        <button class="btn btn-g" onclick="go('s-u1')">← Volver</button>
+        <button class="btn btn-p" onclick="go('s-u3')">Continuar →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== USER ONBOARDING 5A: PREFERENCIAS ===== -->
+<div id="s-u3" class="scr">
+  <div class="ob-shell">
+    <div class="ob-card">
+      <div class="ob-prog"><div class="op on"></div><div class="op on"></div><div class="op on"></div><div class="op on"></div><div class="op"></div></div>
+      <div class="ob-label">Preferencias · Paso 4 de 5</div>
+      <div class="ob-q">¿Cómo prefieres participar?</div>
+      <div style="margin-bottom:1.1rem">
+        <div style="font-size:12px;font-weight:600;color:var(--mu);margin-bottom:.5rem">Modalidad</div>
+        <div class="opts" id="mod-opts">
+          <button class="opt" onclick="togP(this,'mod','individual')">🙋 Individual</button>
+          <button class="opt" onclick="togP(this,'mod','pequeño')">👫 Grupos pequeños</button>
+          <button class="opt" onclick="togP(this,'mod','grupal')">👥 Grupos grandes</button>
+          <button class="opt" onclick="togP(this,'mod','cualquiera')">🔀 Me da igual</button>
+        </div>
+      </div>
+      <div style="margin-bottom:1.1rem">
+        <div style="font-size:12px;font-weight:600;color:var(--mu);margin-bottom:.5rem">Nivel</div>
+        <div class="opts" id="nivel-opts">
+          <button class="opt" onclick="selP(this,'nivel','principiante','nivel-opts')">🌱 Principiante</button>
+          <button class="opt" onclick="selP(this,'nivel','intermedio','nivel-opts')">🔥 Intermedio</button>
+          <button class="opt" onclick="selP(this,'nivel','avanzado','nivel-opts')">⚡ Avanzado</button>
+        </div>
+      </div>
+      <div style="margin-bottom:1.1rem">
+        <div style="font-size:12px;font-weight:600;color:var(--mu);margin-bottom:.5rem">Horarios preferidos</div>
+        <div class="opts" id="hora-opts">
+          <button class="opt" onclick="togP(this,'hora','manana')">🌅 Mañanas</button>
+          <button class="opt" onclick="togP(this,'hora','tarde')">☀️ Tardes</button>
+          <button class="opt" onclick="togP(this,'hora','noche')">🌙 Noches</button>
+          <button class="opt" onclick="togP(this,'hora','finde')">🎊 Fin de semana</button>
+        </div>
+      </div>
+      <div class="slider-wrap">
+        <div class="slider-lbl"><span style="font-size:12px;font-weight:600;color:var(--mu)">Presupuesto mensual</span><span class="slider-val" id="budget-val">$30.000</span></div>
+        <input type="range" min="10" max="100" value="30" step="5" oninput="document.getElementById('budget-val').textContent='$'+this.value+'.000'">
+        <div class="slider-lbl"><span style="font-size:10px;color:var(--mu)">$10.000</span><span style="font-size:10px;color:var(--mu)">$100.000+</span></div>
+      </div>
+      <div class="ob-nav spread">
+        <button class="btn btn-g" onclick="go('s-u2')">← Volver</button>
+        <button class="btn btn-p" onclick="finishUserOnboarding()">Continuar →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SCREEN 6A: PERSONALIZING ===== -->
+<div id="s-loading" class="scr">
+  <div class="load-inner">
+    <div class="load-spinner"></div>
+    <div class="load-title">Personalizando tu experiencia...</div>
+    <div style="font-size:13px;color:var(--mu);margin-bottom:1.5rem">Estamos buscando las mejores actividades para ti.</div>
+    <div class="load-steps">
+      <div class="ls" id="ls1"><div class="ls-dot"></div>Analizando tus intereses...</div>
+      <div class="ls" id="ls2"><div class="ls-dot"></div>Buscando actividades en tu zona...</div>
+      <div class="ls" id="ls3"><div class="ls-dot"></div>Filtrando por tu nivel y horario...</div>
+      <div class="ls" id="ls4"><div class="ls-dot"></div>Preparando recomendaciones personalizadas...</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== ORG ONBOARDING 3B ===== -->
+<div id="s-o1" class="scr">
+  <div class="ob-shell">
+    <div class="ob-card">
+      <div class="ob-prog"><div class="op on"></div><div class="op on"></div><div class="op"></div><div class="op"></div><div class="op"></div></div>
+      <div class="ob-label">Perfil organizador · Paso 2 de 5</div>
+      <div class="ob-q">Datos de tu organización</div>
+      <div class="fi-row">
+        <div class="fg"><label class="fi-label">Tu nombre</label><input class="fi" id="o-name" type="text" placeholder="Nombre"></div>
+        <div class="fg"><label class="fi-label">Organización / emprendimiento</label><input class="fi" id="o-org" type="text" placeholder="Nombre del taller..."></div>
+      </div>
+      <div class="fg"><label class="fi-label">Correo electrónico</label><input class="fi" id="o-mail" type="email" placeholder="tu@email.com"></div>
+      <div class="fg"><label class="fi-label">WhatsApp</label><input class="fi" id="o-wa" type="tel" placeholder="+56 9 XXXX XXXX"></div>
+      <div class="fi-row">
+        <div class="fg"><label class="fi-label">Instagram</label><input class="fi" id="o-ig" type="text" placeholder="@usuario"></div>
+        <div class="fg"><label class="fi-label">Sitio web</label><input class="fi" id="o-web" type="text" placeholder="www.sitio.cl"></div>
+      </div>
+      <div class="ob-nav spread">
+        <button class="btn btn-g" onclick="go('s-role')">← Volver</button>
+        <button class="btn btn-p" onclick="nextO1()">Continuar →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== ORG ONBOARDING 4B ===== -->
+<div id="s-o2" class="scr">
+  <div class="ob-shell">
+    <div class="ob-card">
+      <div class="ob-prog"><div class="op on"></div><div class="op on"></div><div class="op on"></div><div class="op"></div><div class="op"></div></div>
+      <div class="ob-label">Categorías · Paso 3 de 5</div>
+      <div class="ob-q">¿Qué tipo de actividades organizas?</div>
+      <div class="opts" id="org-cats">
+        <button class="opt" onclick="togOC(this,'deporte')">🏋️ Deportes</button>
+        <button class="opt" onclick="togOC(this,'arte')">🎨 Arte</button>
+        <button class="opt" onclick="togOC(this,'bienestar')">🧘 Bienestar</button>
+        <button class="opt" onclick="togOC(this,'outdoor')">🏔️ Outdoor</button>
+        <button class="opt" onclick="togOC(this,'musica')">🎵 Música</button>
+        <button class="opt" onclick="togOC(this,'tech')">💻 Tecnología</button>
+        <button class="opt" onclick="togOC(this,'social')">🎉 Social</button>
+        <button class="opt" onclick="togOC(this,'otro')">✨ Otras</button>
+      </div>
+      <div class="ob-nav spread">
+        <button class="btn btn-g" onclick="go('s-o1')">← Volver</button>
+        <button class="btn btn-p" onclick="go('s-o3')">Continuar →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== ORG ONBOARDING 5B: PRIMERA ACTIVIDAD ===== -->
+<div id="s-o3" class="scr">
+  <div class="ob-shell" style="justify-content:flex-start;padding-top:2rem">
+    <div class="ob-card">
+      <div class="ob-prog"><div class="op on"></div><div class="op on"></div><div class="op on"></div><div class="op on"></div><div class="op"></div></div>
+      <div class="ob-label">Primera actividad · Paso 4 de 5</div>
+      <div class="ob-q">Publica tu primera actividad</div>
+      <div class="fg"><label class="fi-label">Nombre de la actividad</label><input class="fi" id="oa-name" type="text" placeholder="Ej: Yoga para principiantes"></div>
+      <div class="fi-row">
+        <div class="fg"><label class="fi-label">Categoría</label>
+          <select class="fi" id="oa-cat" style="margin:0">
+            <option value="bienestar">Bienestar</option><option value="deporte">Deporte</option><option value="arte">Arte</option><option value="outdoor">Outdoor</option><option value="social">Social</option><option value="tech">Tecnología</option>
+          </select>
+        </div>
+        <div class="fg"><label class="fi-label">Modalidad</label>
+          <select class="fi" id="oa-mod" style="margin:0"><option>Presencial</option><option>Online</option><option>Híbrida</option></select>
+        </div>
+      </div>
+      <div class="fg"><label class="fi-label">Descripción</label><input class="fi" id="oa-desc" type="text" placeholder="Describe tu actividad..."></div>
+      <div class="fi-row">
+        <div class="fg"><label class="fi-label">Precio mensual ($)</label><input class="fi" id="oa-price" type="number" placeholder="35000"></div>
+        <div class="fg"><label class="fi-label">Cupos disponibles</label><input class="fi" id="oa-cupos" type="number" placeholder="15"></div>
+      </div>
+      <div class="fi-row">
+        <div class="fg"><label class="fi-label">Nivel</label>
+          <select class="fi" id="oa-nivel" style="margin:0"><option>Todos los niveles</option><option>Principiante</option><option>Intermedio</option><option>Avanzado</option></select>
+        </div>
+        <div class="fg"><label class="fi-label">Tipo</label>
+          <select class="fi" id="oa-tipo" style="margin:0"><option>Grupal</option><option>Individual</option><option>Grupal pequeño</option></select>
+        </div>
+      </div>
+      <div class="fi-row">
+        <div class="fg"><label class="fi-label">Horario 1</label><input class="fi" id="oa-h1" type="text" placeholder="Lun/Mié 08:00–09:00"></div>
+        <div class="fg"><label class="fi-label">Horario 2</label><input class="fi" id="oa-h2" type="text" placeholder="Sáb 10:00–12:00"></div>
+      </div>
+      <div class="fg"><label class="fi-label">Ubicación</label><input class="fi" id="oa-loc" type="text" placeholder="Dirección o zona"></div>
+      <div class="ob-nav spread">
+        <button class="btn btn-g" onclick="go('s-o2')">← Volver</button>
+        <button class="btn btn-p" onclick="finishOrgOnboarding()">Publicar actividad →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== ORG LOADING ===== -->
+<div id="s-oloading" class="scr">
+  <div class="load-inner">
+    <div class="load-spinner"></div>
+    <div class="load-title">Configurando tu perfil...</div>
+    <div style="font-size:13px;color:var(--mu);margin-bottom:1.5rem">Estamos dejando todo listo para que empieces.</div>
+    <div class="load-steps">
+      <div class="ls" id="ols1"><div class="ls-dot"></div>Creando tu perfil de organizador...</div>
+      <div class="ls" id="ols2"><div class="ls-dot"></div>Publicando tu primera actividad...</div>
+      <div class="ls" id="ols3"><div class="ls-dot"></div>Activando tu dashboard...</div>
+      <div class="ls" id="ols4"><div class="ls-dot"></div>¡Todo listo!</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== HOME USUARIO ===== -->
+<div id="s-home" class="scr">
+  <!-- Hero -->
+  <div class="hero-u">
+    <div class="hero-greet" id="hero-greet">Bienvenido a FOMO</div>
+    <div class="hero-title" id="hero-title">Actividades personalizadas<br>para ti</div>
+    <div class="hero-stats" style="margin-top:1rem">
+      <div class="hstat"><strong>9+</strong><span>Actividades</span></div>
+      <div class="hstat"><strong>48</strong><span>Organizadores</span></div>
+      <div class="hstat"><strong>312</strong><span>Activos</span></div>
+    </div>
+  </div>
+  <!-- Content Tabs -->
+  <div id="htab-cat">
+    <!-- Recomendadas -->
+    <div class="rec-section">
+      <div class="sec-title">✨ Recomendadas para ti</div>
+      <div class="rec-scroll" id="rec-scroll"></div>
+    </div>
+    <!-- Filters -->
+    <div class="fbar">
+      <button class="chip on" onclick="filterCat('todo',this)">Todas</button>
+      <button class="chip" onclick="filterCat('deporte',this)">🏋️ Deporte</button>
+      <button class="chip" onclick="filterCat('arte',this)">🎨 Arte</button>
+      <button class="chip" onclick="filterCat('bienestar',this)">🧘 Bienestar</button>
+      <button class="chip" onclick="filterCat('social',this)">🎉 Social</button>
+      <button class="chip" onclick="filterCat('outdoor',this)">🏔️ Outdoor</button>
+      <button class="adv-btn" onclick="document.getElementById('adv-f').classList.toggle('on')">⚙ Filtros</button>
+    </div>
+    <div class="adv-panel" id="adv-f">
+      <div class="af"><label>Precio</label><select onchange="applyF()" id="f-p"><option value="">Cualquier precio</option><option value="cheap">Hasta $25k</option><option value="mid">$25k–$45k</option><option value="high">Más de $45k</option></select></div>
+      <div class="af"><label>Modalidad</label><select onchange="applyF()" id="f-m"><option value="">Cualquiera</option><option value="presencial">Presencial</option><option value="online">Online</option></select></div>
+      <div class="af"><label>Nivel</label><select onchange="applyF()" id="f-n"><option value="">Cualquier nivel</option><option value="Todos">Todos</option><option value="Principiante">Principiante</option><option value="Intermedio">Intermedio</option></select></div>
+      <div class="af"><label>Tipo</label><select onchange="applyF()" id="f-t"><option value="">Cualquier tipo</option><option value="Individual">Individual</option><option value="Grupal">Grupal</option></select></div>
+    </div>
+    <div class="cat-wrap">
+      <div class="cat-head"><div class="sec-title" style="margin-bottom:0">Catálogo completo</div><span class="cat-count" id="cat-count">9 actividades</span></div>
+      <div class="cat-grid" id="cat-grid"></div>
+    </div>
+  </div>
+  <div id="htab-favs" style="display:none">
+    <div class="sec-wrap"><h2 style="font-size:1.2rem;margin-bottom:1rem">❤️ Mis favoritos</h2><div class="cat-grid" id="favs-grid"></div><div id="favs-empty" class="empty-st"><div class="big">💜</div><p>Aún sin favoritos.<br>Explora y guarda los que te interesen.</p></div></div>
+  </div>
+  <div id="htab-map" style="display:none">
+    <div class="sec-wrap"><h2 style="font-size:1.2rem;margin-bottom:.5rem">🗺 Mapa de actividades</h2><p style="font-size:12px;color:var(--mu);margin-bottom:1rem">Haz clic en un pin para ver la actividad.</p><div class="map-big"><div class="map-pins" id="map-pins"></div><div class="map-leg">📍 Santiago · <strong>9 actividades</strong></div></div><div class="cat-grid" style="margin-top:1.2rem" id="map-grid"></div></div>
+  </div>
+  <div id="htab-tests" style="display:none">
+    <div class="test-sec" style="border-top:none">
+      <div style="text-align:center;margin-bottom:1rem"><h2 style="font-size:1.2rem">Testimonios de la comunidad</h2><p style="font-size:13px;color:var(--mu)">Personas reales, experiencias reales.</p></div>
+      <div class="test-grid" id="test-grid"></div>
+    </div>
+  </div>
+  <footer>
+    <strong>FOMO.</strong> · Conecta con tu comunidad · Santiago 2026
+    <span class="adm-trig" onclick="launchAdmin()" title="Panel administrador">⚙</span>
+  </footer>
+</div>
+
+<!-- ===== ORG DASHBOARD ===== -->
+<div id="s-org" class="scr">
+  <div class="org-nav" id="org-nav">
+    <button class="ot on" onclick="orgTab('dash')">📊 Dashboard</button>
+    <button class="ot" onclick="orgTab('acts')">📋 Actividades</button>
+    <button class="ot" onclick="orgTab('inscritos')">👥 Inscritos</button>
+    <button class="ot" onclick="orgTab('pagos')">💳 Pagos</button>
+    <button class="ot" onclick="orgTab('msgs')">💬 Mensajes</button>
+    <button class="ot" onclick="orgTab('metricas')">📈 Métricas</button>
+  </div>
+  <div class="org-content">
+    <!-- DASH -->
+    <div class="ot-pane on" id="op-dash">
+      <div style="margin-bottom:1.1rem">
+        <h2 style="font-size:1.2rem" id="org-welcome-title">Panel de organizador</h2>
+        <p style="font-size:12px;color:var(--mu);margin-top:3px" id="org-welcome-sub">Bienvenido a tu panel de gestión</p>
+      </div>
+      <div class="kpi-g">
+        <div class="kc"><div class="kc-l">Actividades</div><div class="kc-v" id="okpi-acts">1</div><div class="kc-s">publicadas</div></div>
+        <div class="kc"><div class="kc-l">Inscritos</div><div class="kc-v" id="okpi-ins">0</div><div class="kc-s">total</div></div>
+        <div class="kc"><div class="kc-l">Ingresos</div><div class="kc-v" id="okpi-ing">$0</div><div class="kc-s">este mes</div></div>
+        <div class="kc"><div class="kc-l">Pendiente</div><div class="kc-v" id="okpi-pend">$0</div><div class="kc-s">por cobrar</div></div>
+      </div>
+      <div class="scard"><h3>📅 Próximas clases</h3>
+        <table class="dt"><thead><tr><th>Fecha</th><th>Actividad</th><th>Hora</th><th>Inscritos</th><th>Estado</th></tr></thead>
+        <tbody id="org-clases-body"></tbody></table>
+      </div>
+    </div>
+    <!-- ACTS -->
+    <div class="ot-pane" id="op-acts">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:8px">
+        <h3 style="font-size:1rem">Mis actividades</h3>
+        <button class="btn btn-p btn-sm" onclick="document.getElementById('new-act-f').style.display='block'">+ Nueva actividad</button>
+      </div>
+      <div class="scard" id="new-act-f" style="display:none;background:var(--pl)"><h3>➕ Nueva actividad</h3>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px">
+          <div class="fg"><label class="fi-label">Nombre</label><input class="fi" style="margin:0" type="text" id="na-name" placeholder="Nombre del taller"></div>
+          <div class="fg"><label class="fi-label">Precio</label><input class="fi" style="margin:0" type="number" id="na-price" placeholder="$0"></div>
+          <div class="fg"><label class="fi-label">Cupos</label><input class="fi" style="margin:0" type="number" id="na-cupos" placeholder="15"></div>
+          <div class="fg"><label class="fi-label">Nivel</label><select class="fi" style="margin:0" id="na-nivel"><option>Todos los niveles</option><option>Principiante</option><option>Intermedio</option></select></div>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:.8rem"><button class="btn btn-p btn-sm" onclick="saveNewAct()">Guardar</button><button class="btn btn-g btn-sm" onclick="document.getElementById('new-act-f').style.display='none'">Cancelar</button></div>
+      </div>
+      <div class="scard"><table class="dt"><thead><tr><th>Nombre</th><th>Categoría</th><th>Inscritos</th><th>Cupos</th><th>Estado</th><th>Acciones</th></tr></thead>
+        <tbody id="org-acts-body"></tbody></table>
+      </div>
+    </div>
+    <!-- INSCRITOS -->
+    <div class="ot-pane" id="op-inscritos">
+      <div class="scard"><h3>👥 Inscritos</h3>
+        <table class="dt"><thead><tr><th>Nombre</th><th>Actividad</th><th>Fecha</th><th>WhatsApp</th><th>Estado</th></tr></thead>
+        <tbody id="org-ins-body"></tbody></table>
+      </div>
+    </div>
+    <!-- PAGOS -->
+    <div class="ot-pane" id="op-pagos">
+      <div class="kpi-g" style="grid-template-columns:repeat(3,1fr)">
+        <div class="kc"><div class="kc-l">Cobrado</div><div class="kc-v" style="color:var(--g)" id="p-cobrado">$0</div></div>
+        <div class="kc"><div class="kc-l">Pendiente</div><div class="kc-v" style="color:var(--amb)" id="p-pend">$0</div></div>
+        <div class="kc"><div class="kc-l">Próx. pago FOMO</div><div class="kc-v">15 jul</div><div class="kc-s">10% comisión</div></div>
+      </div>
+      <div class="scard"><h3>💳 Historial de pagos</h3>
+        <table class="dt"><thead><tr><th>Persona</th><th>Actividad</th><th>Monto</th><th>Fecha</th><th>Estado</th></tr></thead>
+        <tbody id="org-pagos-body"></tbody></table>
+      </div>
+    </div>
+    <!-- MSGS -->
+    <div class="ot-pane" id="op-msgs">
+      <div class="scard"><h3>💬 Consultas recibidas</h3>
+        <table class="dt"><thead><tr><th>De</th><th>Actividad</th><th>Mensaje</th><th>Fecha</th><th>Acción</th></tr></thead>
+        <tbody>
+          <tr><td>Camila P.</td><td id="org-act-ref">—</td><td>"¿Necesito experiencia previa?"</td><td>8 jun</td><td><button class="btn btn-p btn-sm" onclick="toast('Respondido ✓')">Responder</button></td></tr>
+          <tr><td>Diego R.</td><td id="org-act-ref2">—</td><td>"¿Hay cupos para julio?"</td><td>9 jun</td><td><button class="btn btn-p btn-sm" onclick="toast('Respondido ✓')">Responder</button></td></tr>
+        </tbody></table>
+      </div>
+    </div>
+    <!-- METRICAS -->
+    <div class="ot-pane" id="op-metricas">
+      <div class="kpi-g">
+        <div class="kc"><div class="kc-l">Visualizaciones</div><div class="kc-v" id="om-v">0</div></div>
+        <div class="kc"><div class="kc-l">Inscripciones</div><div class="kc-v" id="om-e">0</div></div>
+        <div class="kc"><div class="kc-l">Conversión</div><div class="kc-v" id="om-cvr">0%</div></div>
+        <div class="kc"><div class="kc-l">Favoritos</div><div class="kc-v" id="om-f">0</div></div>
+      </div>
+      <div class="scard"><h3>🏆 Actividad más popular</h3><p id="org-top-act" style="font-size:13px;color:var(--mu)">—</p></div>
+    </div>
+  </div>
+  <footer><strong>FOMO.</strong> · Panel Organizador · 2026</footer>
+</div>
+
+<!-- ===== ADMIN PANEL ===== -->
+<div id="s-admin" class="scr">
+  <div class="adm-hd">
+    <h2>🔐 Panel Administrador <span class="adm-badge">Solo dueños FOMO</span></h2>
+    <div style="display:flex;gap:7px">
+      <button class="btn btn-sm" style="background:rgba(255,255,255,.12);color:#fff;border:none;cursor:pointer" onclick="exportCSV()">⬇ CSV</button>
+      <button class="btn btn-sm" style="background:rgba(255,255,255,.12);color:#fff;border:none;cursor:pointer" onclick="exportExcel()">⬇ Excel</button>
+      <button class="btn btn-sm" style="background:rgba(255,255,255,.12);color:#fff;border:none;cursor:pointer" onclick="goHome()">← Salir</button>
+    </div>
+  </div>
+  <div class="adm-tabs">
+    <button class="at on" onclick="admTab('overview')">Overview</button>
+    <button class="at" onclick="admTab('funnel')">Funnel</button>
+    <button class="at" onclick="admTab('leads')">Leads</button>
+    <button class="at" onclick="admTab('acts')">Actividades</button>
+    <button class="at" onclick="admTab('eventos')">Eventos</button>
+    <button class="at" onclick="admTab('waitlist')">Lista de espera</button>
+  </div>
+  <div class="adm-content">
+    <div class="at-pane on" id="ap-overview">
+      <div class="adm-kpi" id="adm-kpi"></div>
+      <div class="scard"><h3>📊 Categorías más populares</h3><div id="cat-bars"></div></div>
+      <div class="scard"><h3>🏆 Organizadores destacados</h3>
+        <table class="dt"><thead><tr><th>Organizador</th><th>Actividades</th><th>Inscritos</th><th>Rating</th></tr></thead>
+        <tbody id="org-rank"></tbody></table>
+      </div>
+    </div>
+    <div class="at-pane" id="ap-funnel">
+      <div class="funnel-g" id="funnel-g"></div>
+      <div class="scard"><h3>📈 Conversión por etapa</h3><div id="conv-bars" style="display:flex;flex-direction:column;gap:9px"></div></div>
+      <div class="scard"><h3>⏱ Tiempo en plataforma</h3><div style="font-family:'Syne',sans-serif;font-size:2rem;font-weight:700;color:var(--p)" id="avg-time">0s</div></div>
+    </div>
+    <div class="at-pane" id="ap-leads">
+      <div style="display:flex;gap:8px;margin-bottom:1rem;flex-wrap:wrap">
+        <input class="fi" style="flex:1;margin:0;min-width:180px" type="text" placeholder="Buscar leads..." oninput="searchLeads(this.value)">
+        <select class="fi" style="margin:0;width:auto" onchange="searchLeads('')">
+          <option>Todos los canales</option><option>Instagram</option><option>Google</option><option>Un amigo</option>
+        </select>
+      </div>
+      <div class="scard"><h3>📋 Leads capturados (<span id="leads-c">0</span>)</h3>
+        <table class="dt"><thead><tr><th>Nombre</th><th>Email</th><th>WhatsApp</th><th>Canal</th><th>Interés</th><th>Fecha</th></tr></thead>
+        <tbody id="leads-body"></tbody></table>
+      </div>
+    </div>
+    <div class="at-pane" id="ap-acts">
+      <div class="scard"><h3>👁 Actividades más visitadas</h3>
+        <table class="dt"><thead><tr><th>Actividad</th><th>Categoría</th><th>Vistas</th><th>Favs</th><th>Inscritos</th><th>CVR</th></tr></thead>
+        <tbody id="acts-body"></tbody></table>
+      </div>
+    </div>
+    <div class="at-pane" id="ap-eventos">
+      <div class="scard"><h3>⚡ Eventos en tiempo real</h3><div class="ev-feed" id="ev-feed"></div></div>
+    </div>
+    <div class="at-pane" id="ap-waitlist">
+      <div class="scard"><h3>⏳ Lista de espera (<span id="wl-c">0</span>)</h3>
+        <table class="dt"><thead><tr><th>#</th><th>Nombre</th><th>Email</th><th>Zona</th><th>Fecha</th></tr></thead>
+        <tbody id="wl-body"></tbody></table>
+      </div>
+    </div>
+  </div>
+  <footer><strong>FOMO.</strong> · Panel Admin · Solo uso interno</footer>
+</div>
+
+<!-- OVERLAYS -->
+<div id="act-ov" class="overlay" style="display:none" onclick="closeOv('act-ov',event)">
+  <div class="modal" id="act-modal"></div>
+</div>
+<div id="en-ov" class="overlay" style="display:none" onclick="closeOv('en-ov',event)">
+  <div class="en-box">
+    <h3 id="en-title">Inscribirse</h3>
+    <p id="en-sub">Completa tus datos.</p>
+    <div class="fg2r">
+      <div class="fg"><label class="fi-label">Nombre</label><input class="fi" style="margin:0" id="en-nom" type="text" placeholder="Nombre"></div>
+      <div class="fg"><label class="fi-label">Apellido</label><input class="fi" style="margin:0" id="en-ape" type="text" placeholder="Apellido"></div>
+    </div>
+    <div class="fg"><label class="fi-label">Email</label><input class="fi" id="en-mail" type="email" placeholder="tu@email.com"></div>
+    <div class="fg2r">
+      <div class="fg"><label class="fi-label">WhatsApp</label><input class="fi" style="margin:0" id="en-wa" type="tel" placeholder="+56 9 XXXX"></div>
+      <div class="fg"><label class="fi-label">Edad</label><input class="fi" style="margin:0" id="en-edad" type="number" placeholder="25"></div>
+    </div>
+    <div class="fg"><label class="fi-label">¿Cómo conociste FOMO?</label><select class="fi" id="en-canal"><option value="">Selecciona...</option><option>Instagram</option><option>Google</option><option>Un amigo</option><option>WhatsApp</option><option>Otro</option></select></div>
+    <div style="display:flex;gap:9px;margin-top:.9rem">
+      <button class="btn btn-g" style="flex:1" onclick="document.getElementById('en-ov').style.display='none'">Cancelar</button>
+      <button class="btn btn-p" style="flex:2" onclick="submitEnroll()">Inscribirme →</button>
+    </div>
+    <div class="ok-msg" id="en-ok">🎉 ¡Inscripción confirmada! Te contactamos pronto.</div>
+  </div>
+</div>
+
+<!-- CHATBOT -->
+<button class="cfab" id="cfab" onclick="toggleChat()">💬</button>
+<div class="cpanel" id="cpanel">
+  <div class="ch"><div style="width:26px;height:26px;background:rgba(255,255,255,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px">✨</div><h4>Fomito · Asistente IA</h4><button class="chx" onclick="toggleChat()">×</button></div>
+  <div class="cmsgs" id="cmsgs"><div class="cm bot">¡Hola! Soy Fomito 👋 Dime qué tipo de actividad buscas.</div></div>
+  <div class="cinp"><input type="text" id="cinput" placeholder="Ej: yoga por las mañanas..." onkeydown="if(event.key==='Enter')sendChat()"><button onclick="sendChat()">→</button></div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+// ===== SUPABASE =====
+const SB_URL = 'https://ssvtttctgquwoqejccyq.supabase.co';
+const SB_KEY = 'sb_publishable_YzMJLZko8elCuzeKicizcA_ZNtTMR3l';
+const sb = supabase.createClient(SB_URL, SB_KEY);
+
+async function dbSave(table, data) {
+  try {
+    const { error } = await sb.from(table).insert(data);
+    if (error) console.warn('DB insert error:', table, error.message);
+  } catch(e) { console.warn('DB error:', e); }
+}
+
+async function dbUpsert(table, data, onConflict) {
+  try {
+    const { error } = await sb.from(table).upsert(data, { onConflict });
+    if (error) console.warn('DB upsert error:', table, error.message);
+  } catch(e) { console.warn('DB error:', e); }
+}
+
+async function dbLoad(table, order = 'created_at', limit = 500) {
+  try {
+    const { data, error } = await sb.from(table).select('*').order(order, { ascending: false }).limit(limit);
+    if (error) { console.warn('DB load error:', table, error.message); return []; }
+    return data || [];
+  } catch(e) { console.warn('DB error:', e); return []; }
+}
+
+// ===== DATA =====
+const ACTS=[
+  {id:1,name:"Yoga Consciente",org:"Catalina Ramírez",orgBio:"Profesora certificada, 8 años de experiencia. Formada en Rishikesh, India.",orgEmoji:"🧘‍♀️",orgMail:"catalina@yoga.cl",orgWa:"+56912345678",orgIG:"@cat_yoga",cat:"bienestar",mod:"presencial",tipo:"Grupal",emoji:"🧘",bg:"linear-gradient(135deg,#EDE8FF,#C4B5FD)",price:35000,free:true,level:"Todos",horDesc:"manana",horarios:["Lun/Mié 08:00–09:00","Mar/Jue 19:00–20:00","Sáb 10:00–11:30"],loc:"Providencia",cupos:3,rating:4.9,reviews:47,dur:"60 min",desc:"Práctica de yoga que integra movimiento consciente, respiración y presencia. Grupos reducidos para atención personalizada. Sin experiencia previa necesaria.",benefits:["Reduce el estrés y la ansiedad","Mejora la flexibilidad y postura","Espacio de calma y conexión","Sin experiencia previa necesaria"],revs:[{n:"María G.",t:"Excelente clase, Catalina es increíble.",emoji:"🧘"},{n:"Pedro S.",t:"El mejor yoga que he tomado en Santiago.",emoji:"💪"}]},
+  {id:2,name:"Cerámica Libre",org:"Martín Vega",orgBio:"Artista plástico y ceramista UC. 5 años enseñando a adultos.",orgEmoji:"🏺",orgMail:"martin@ceramica.cl",orgWa:"+56911111111",orgIG:"@martin_ceramica",cat:"arte",mod:"presencial",tipo:"Grupal pequeño",emoji:"🏺",bg:"linear-gradient(135deg,#FEF3C7,#FCD34D)",price:45000,free:true,level:"Principiante",horDesc:"tarde",horarios:["Mar/Jue 18:00–20:30","Sáb 10:00–12:30"],loc:"Barrio Italia",cupos:5,rating:4.8,reviews:31,dur:"2.5 hrs",desc:"Cerámica como proceso creativo y meditativo. Grupos de máximo 8 personas. Técnicas de modelado manual y finishing.",benefits:["Expresión creativa sin límites","Grupos muy reducidos","Llevas tu pieza terminada","Efecto relajante comprobado"],revs:[{n:"Fernanda R.",t:"Increíble experiencia, muy relajante.",emoji:"🎨"},{n:"Lucas M.",t:"Aprendí muchísimo en pocas clases.",emoji:"🏺"}]},
+  {id:3,name:"Crossfit Matutino",org:"Rodrigo Pinto",orgBio:"Entrenador CrossFit L2. Especialista en movilidad y fuerza funcional.",orgEmoji:"💪",orgMail:"rodrigo@cf.cl",orgWa:"+56922222222",orgIG:"@cf_rodrigo",cat:"deporte",mod:"presencial",tipo:"Grupal",emoji:"💪",bg:"linear-gradient(135deg,#DBEAFE,#93C5FD)",price:40000,free:false,level:"Intermedio",horDesc:"manana",horarios:["Lun–Vie 06:30–07:30","Sáb 09:00–10:30"],loc:"Las Condes",cupos:8,rating:4.7,reviews:89,dur:"60 min",desc:"Entrenamiento funcional de alta intensidad. Combinamos levantamiento olímpico, gimnasia y cardio. WOD diferente cada día.",benefits:["Resultados rápidos y visibles","Comunidad muy motivadora","Escala a todos los niveles","Seguimiento personalizado"],revs:[{n:"Sebastián T.",t:"El mejor gym que he conocido.",emoji:"🏋️"},{n:"Tomás A.",t:"Rodrigo es un excelente profe.",emoji:"💪"}]},
+  {id:4,name:"Fotografía Callejera",org:"Isadora Muñoz",orgBio:"Fotógrafa documental. National Geographic en Español.",orgEmoji:"📷",orgMail:"isadora@foto.cl",orgWa:"+56933333333",orgIG:"@isadora_foto",cat:"arte",mod:"presencial",tipo:"Individual",emoji:"📷",bg:"linear-gradient(135deg,#FCE7F3,#F9A8D4)",price:55000,free:false,level:"Todos",horDesc:"finde",horarios:["Sáb 09:00–13:00","Dom 10:00–14:00"],loc:"Centro / Lastarria",cupos:2,rating:4.9,reviews:22,dur:"4 hrs",desc:"Salidas fotográficas por Santiago. Composición, luz y narrativa visual. Retroalimentación individual de tus fotos.",benefits:["Mentoría 100% personalizada","Recorrido por Santiago histórico","Aprende tu estilo propio","Retroalimentación detallada"],revs:[{n:"Andrea C.",t:"Isadora es una gran maestra.",emoji:"📷"}]},
+  {id:5,name:"Escalada Indoor",org:"Felipe Araya",orgBio:"Escalador de competición y guía IFMGA.",orgEmoji:"🧗",orgMail:"felipe@climb.cl",orgWa:"+56944444444",orgIG:"@felipe_climb",cat:"outdoor",mod:"presencial",tipo:"Grupal",emoji:"🧗",bg:"linear-gradient(135deg,#D1FAE5,#6EE7B7)",price:30000,free:true,level:"Principiante",horDesc:"noche",horarios:["Mar/Jue 19:00–21:00","Sáb 10:00–13:00"],loc:"Ñuñoa",cupos:6,rating:4.6,reviews:58,dur:"2 hrs",desc:"Aprende a escalar desde cero. Técnica de pies, agarre, rápel y lectura de vía. Muro con 150+ rutas.",benefits:["Desde cero sin experiencia","Seguridad garantizada","Comunidad escaladora activa","Equipamiento incluido"],revs:[{n:"Tomás N.",t:"La 1ª clase fue gratuita y me enamoré.",emoji:"🧗"},{n:"Camila F.",t:"Felipe explica muy bien.",emoji:"🏔️"}]},
+  {id:6,name:"Meditación Vipassana",org:"Ana Lucía Ibáñez",orgBio:"15 años de práctica. Formada con S.N. Goenka.",orgEmoji:"🕯️",orgMail:"ana@meditar.cl",orgWa:"+56955555555",orgIG:"@analucia_medita",cat:"bienestar",mod:"online",tipo:"Grupal",emoji:"🕯️",bg:"linear-gradient(135deg,#EDE8FF,#DDD6FE)",price:20000,free:true,level:"Todos",horDesc:"manana",horarios:["Lun 07:00–08:00","Mié 20:00–21:00","Dom 09:00–10:30"],loc:"Online",cupos:12,rating:5.0,reviews:14,dur:"60 min",desc:"Técnica de atención plena en respiración y sensaciones corporales. Sin creencias religiosas necesarias.",benefits:["Reduce ansiedad y estrés","Online desde tu casa","Sin experiencia necesaria","Comunidad de apoyo activa"],revs:[{n:"Valentina S.",t:"Transformó mi rutina matutina.",emoji:"🕯️"}]},
+  {id:7,name:"Salsa y Bachata",org:"Carlos & Diana",orgBio:"10 años de competición. Representaron a Chile en WLDC.",orgEmoji:"💃",orgMail:"baile@tropical.cl",orgWa:"+56966666666",orgIG:"@carlosydiana",cat:"social",mod:"presencial",tipo:"Grupal",emoji:"💃",bg:"linear-gradient(135deg,#FFF1F2,#FECDD3)",price:25000,free:true,level:"Principiante",horDesc:"noche",horarios:["Lun 20:00–21:30","Jue 20:00–21:30","Sáb 15:00–17:00"],loc:"Providencia",cupos:10,rating:4.8,reviews:63,dur:"90 min",desc:"Aprende salsa y bachata en ambiente festivo. Clases por nivel. ¡No necesitas pareja!",benefits:["Sin pareja necesaria","Ambiente súper festivo","Progresión clara por niveles","Comunidad muy activa"],revs:[{n:"Camila P.",t:"Lo mejor que hice este año.",emoji:"💃"},{n:"Roberto V.",t:"Ahora bailo todas las semanas.",emoji:"🎉"}]},
+  {id:8,name:"Huerto Urbano",org:"Gabriela Fuentes",orgBio:"Ingeniera agrónoma. Permacultura y agricultura regenerativa.",orgEmoji:"🌱",orgMail:"gabi@huerto.cl",orgWa:"+56977777777",orgIG:"@gabi_huerto",cat:"outdoor",mod:"presencial",tipo:"Grupal pequeño",emoji:"🌱",bg:"linear-gradient(135deg,#ECFDF5,#A7F3D0)",price:18000,free:false,level:"Todos",horDesc:"finde",horarios:["Sáb 09:00–12:00"],loc:"Maipú",cupos:15,rating:4.7,reviews:19,dur:"3 hrs",desc:"Cultiva tus alimentos en espacios pequeños. Compostaje, siembra, control de plagas natural.",benefits:["Te llevas semillas y plantas","Conexión con la tierra","Aprendizaje 100% práctico","Comunidad sustentable"],revs:[{n:"Sofía M.",t:"Aprendí más en 3 horas que en meses.",emoji:"🌱"}]},
+  {id:9,name:"Escritura Creativa",org:"Lucas Pereira",orgBio:"Escritor. 2 novelas en Penguin Chile. Magíster en Escritura UC.",orgEmoji:"✍️",orgMail:"lucas@escribe.cl",orgWa:"+56988888888",orgIG:"@lucas_escribe",cat:"arte",mod:"online",tipo:"Individual",emoji:"✍️",bg:"linear-gradient(135deg,#FEF3C7,#FDE68A)",price:50000,free:false,level:"Todos",horDesc:"finde",horarios:["Por coordinar","Sesiones 1:1 flexibles"],loc:"Online",cupos:3,rating:4.9,reviews:28,dur:"60 min",desc:"Taller individual sobre tus propios textos. Sesión semanal + retroalimentación escrita.",benefits:["Mentoría 1:1 exclusiva","Flexibilidad total de horario","Retroalimentación detallada","Para cuento, novela o crónica"],revs:[{n:"Ignacio R.",t:"Lucas cambió mi forma de escribir.",emoji:"✍️"}]}
+];
+const TESTS=[
+  {n:"María G.",act:"Yoga Consciente",e:"🧘",t:"Llevaba meses buscando yoga que se adaptara a mí. Con FOMO encontré a Catalina en 5 minutos."},
+  {n:"Sebastián T.",act:"Crossfit",e:"💪",t:"Lo mejor fue ver el nivel del grupo antes de entrar. El filtro por nivel es clave."},
+  {n:"Fernanda R.",act:"Cerámica Libre",e:"🏺",t:"Grupos pequeños, horario flexible y profe con experiencia real. FOMO reemplazó semanas de búsqueda."},
+  {n:"Tomás N.",act:"Escalada Indoor",e:"🧗",t:"Vi la etiqueta 'primera clase gratis' y decidí probar sin arriesgar nada. Ahora voy 3 veces por semana."},
+  {n:"Valentina S.",act:"Meditación",e:"🕯️",t:"La descripción honesta hace toda la diferencia. Supe exactamente qué esperar. Cero sorpresas."},
+  {n:"Camila P.",act:"Salsa y Bachata",e:"💃",t:"Las reseñas reales antes de inscribirse son un game changer. Me fui sin miedo."}
+];
+const PINS=[{id:1,x:'18%',y:'35%'},{id:2,x:'48%',y:'42%'},{id:3,x:'72%',y:'25%'},{id:4,x:'50%',y:'60%'},{id:5,x:'52%',y:'50%'},{id:6,x:'50%',y:'50%'},{id:7,x:'40%',y:'38%'},{id:8,x:'15%',y:'65%'},{id:9,x:'50%',y:'50%'}];
+
+// ===== STATE =====
+const U={
+  role:'',name:'',edad:'',zona:'',mail:'',wa:'',
+  interests:[],mod:[],nivel:'',hora:[],budget:30,
+  favs:new Set(),
+  org:{name:'',orgName:'',mail:'',wa:'',ig:'',web:'',cats:[],firstAct:null,acts:[],inscritos:[],pagos:[]},
+  an:{visits:1,quizDone:0,detailViews:0,enrolls:0,chats:0,favs:0,formStarts:0,start:Date.now()},
+  leads:[],waitlist:[],actViews:{},actFavs:{},actEnrolls:{},
+  events:[],currentEnroll:null,isWait:false
+};
+
+// ===== SCREEN NAV =====
+function go(id){
+  document.querySelectorAll('.scr').forEach(s=>s.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+  window.scrollTo(0,0);
+}
+function goHome(){
+  go('s-welcome');
+  document.getElementById('app-nav').style.display='none';
+  document.getElementById('cfab').classList.remove('on');
+  document.getElementById('cpanel').classList.remove('vis');
+  setNavRole('');
+}
+
+// ===== ROLE SELECTION =====
+let selectedRole='';
+function selRole(r){
+  selectedRole=r;
+  document.getElementById('rc-user').classList.toggle('on',r==='user');
+  document.getElementById('rc-org').classList.toggle('on',r==='org');
+}
+function nextRole(){
+  if(!selectedRole){toast('Selecciona un rol para continuar');return}
+  U.role=selectedRole;
+  go(selectedRole==='user'?'s-u1':'s-o1');
+}
+
+// ===== USER ONBOARDING =====
+function nextU1(){
+  U.name=document.getElementById('u-name').value.trim();
+  U.mail=document.getElementById('u-mail').value.trim();
+  U.wa=document.getElementById('u-wa').value.trim();
+  U.edad=document.getElementById('u-edad').value;
+  U.zona=document.getElementById('u-zona').value;
+  if(!U.mail){toast('Ingresa tu email para continuar');return}
+  if(U.mail) {
+    U.waitlist.push({name:U.name,email:U.mail,zona:U.zona,date:new Date().toLocaleDateString('es-CL')});
+    dbSave('lista_espera',{nombre:U.name,email:U.mail,zona:U.zona});
+  }
+  evt('📝','dp',`Perfil creado: ${U.name||U.mail}`);
+  go('s-u2');
+}
+function togInt(btn,val){btn.classList.toggle('on');const i=U.interests.indexOf(val);i>-1?U.interests.splice(i,1):U.interests.push(val)}
+function togP(btn,key,val){
+  btn.classList.toggle('on');
+  const arr=U[key]||(U[key]=[]);
+  const i=arr.indexOf(val);i>-1?arr.splice(i,1):arr.push(val);
+}
+function selP(btn,key,val,grp){
+  document.getElementById(grp).querySelectorAll('.opt').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');U[key]=val;
+}
+function finishUserOnboarding(){
+  go('s-loading');
+  U.an.quizDone++;
+  // Save full user profile to Supabase
+  dbUpsert('usuarios', {
+    nombre: U.name,
+    email: U.mail,
+    whatsapp: U.wa,
+    edad: U.edad,
+    zona: U.zona,
+    intereses: U.interests,
+    nivel: U.nivel,
+    horarios: U.hora,
+    modalidad: U.mod.join(','),
+    budget: U.budget,
+    rol: 'usuario'
+  }, 'email');
+  dbSave('eventos',{tipo:'quiz_completado',descripcion:`Usuario completó onboarding: ${U.name||U.mail}`,metadata:{intereses:U.interests,zona:U.zona}});
+  evt('✅','dg','Quiz de usuario completado');
+  ['ls1','ls2','ls3','ls4'].forEach((id,i)=>setTimeout(()=>document.getElementById(id).classList.add('on'),(i+1)*600));
+  setTimeout(()=>launchUserHome(),3200);
+}
+function launchUserHome(){
+  go('s-home');
+  setNavRole('user');
+  document.getElementById('cfab').classList.add('on');
+  if(U.name) document.getElementById('hero-greet').textContent=`Hola, ${U.name} 👋`;
+  if(U.name) document.getElementById('hero-title').textContent=`Actividades personalizadas\npara ${U.name.split(' ')[0]}`;
+  if(U.name) document.getElementById('nav-av').textContent=U.name.charAt(0).toUpperCase();
+  buildRec();buildCatalog(ACTS);buildTestimonios();buildMap();
+}
+
+// ===== ORG ONBOARDING =====
+function nextO1(){
+  U.org.name=document.getElementById('o-name').value.trim();
+  U.org.orgName=document.getElementById('o-org').value.trim();
+  U.org.mail=document.getElementById('o-mail').value.trim();
+  U.org.wa=document.getElementById('o-wa').value.trim();
+  U.org.ig=document.getElementById('o-ig').value.trim();
+  if(!U.org.mail){toast('Ingresa tu email');return}
+  go('s-o2');
+}
+function togOC(btn,val){btn.classList.toggle('on');const i=U.org.cats.indexOf(val);i>-1?U.org.cats.splice(i,1):U.org.cats.push(val)}
+function finishOrgOnboarding(){
+  const name=document.getElementById('oa-name').value.trim();
+  const price=parseInt(document.getElementById('oa-price').value)||35000;
+  const cupos=parseInt(document.getElementById('oa-cupos').value)||15;
+  const loc=document.getElementById('oa-loc').value||'Santiago';
+  const desc=document.getElementById('oa-desc').value||'Actividad publicada en FOMO.';
+  const h1=document.getElementById('oa-h1').value||'Lun/Mié 08:00–09:00';
+  const h2=document.getElementById('oa-h2').value||'Vie 19:00–20:00';
+  const cat=document.getElementById('oa-cat').value;
+  const act={id:100+Math.random()*100|0,name:name||'Mi primera actividad',org:U.org.orgName||U.org.name,orgBio:'Organizador en FOMO.',orgEmoji:'🏢',orgMail:U.org.mail,orgWa:U.org.wa,orgIG:U.org.ig,cat,mod:document.getElementById('oa-mod').value.toLowerCase(),tipo:document.getElementById('oa-tipo').value,emoji:'🎯',bg:'linear-gradient(135deg,#EDE8FF,#C4B5FD)',price,free:false,level:document.getElementById('oa-nivel').value,horDesc:'manana',horarios:[h1,h2],loc,cupos,rating:0,reviews:0,dur:'60 min',desc,benefits:['Actividad de calidad','Instructores certificados'],revs:[]};
+  U.org.firstAct=act;U.org.acts.push(act);
+  go('s-oloading');
+  // Save org to Supabase
+  dbUpsert('organizadores',{
+    nombre: U.org.name,
+    org_nombre: U.org.orgName,
+    email: U.org.mail,
+    whatsapp: U.org.wa,
+    instagram: U.org.ig,
+    web: U.org.web,
+    categorias: U.org.cats
+  }, 'email');
+  dbSave('eventos',{tipo:'organizador_registrado',descripcion:`Org registrado: ${U.org.orgName||U.org.name}`,metadata:{cats:U.org.cats}});
+  evt('🏢','dp',`Organizador registrado: ${U.org.orgName||U.org.name}`);
+  ['ols1','ols2','ols3','ols4'].forEach((id,i)=>setTimeout(()=>document.getElementById(id).classList.add('on'),(i+1)*600));
+  setTimeout(()=>launchOrgDash(),3200);
+}
+function launchOrgDash(){
+  go('s-org');
+  setNavRole('org');
+  document.getElementById('org-welcome-title').textContent=`Bienvenido, ${U.org.name||'Organizador'}`;
+  document.getElementById('org-welcome-sub').textContent=`${U.org.orgName||'Tu organización'} · Panel de gestión`;
+  buildOrgDash();
+}
+function buildOrgDash(){
+  // KPIs
+  document.getElementById('okpi-acts').textContent=U.org.acts.length;
+  const totalIns=U.org.inscritos.length;
+  document.getElementById('okpi-ins').textContent=totalIns;
+  const totalIng=U.org.pagos.filter(p=>p.estado==='Pagado').reduce((s,p)=>s+p.monto,0);
+  const totalPend=U.org.pagos.filter(p=>p.estado==='Pendiente').reduce((s,p)=>s+p.monto,0);
+  document.getElementById('okpi-ing').textContent='$'+Math.round(totalIng/1000)+'k';
+  document.getElementById('okpi-pend').textContent='$'+Math.round(totalPend/1000)+'k';
+  // Clases
+  const cb=document.getElementById('org-clases-body');cb.innerHTML='';
+  const days=['Lun','Mar','Mié','Jue','Vie'];
+  U.org.acts.forEach(a=>{
+    a.horarios.slice(0,2).forEach((h,i)=>{
+      const tr=document.createElement('tr');
+      tr.innerHTML=`<td>${days[i*2]} ${9+i} jun</td><td>${a.name}</td><td>${h.includes('–')?h.split(' ').slice(-1)[0]:'—'}</td><td>${Math.floor(Math.random()*a.cupos)+'/'+(a.cupos+Math.floor(Math.random()*5))}</td><td><span class="sb sg">Activa</span></td>`;
+      cb.appendChild(tr);
+    });
+  });
+  // Acts table
+  const ab=document.getElementById('org-acts-body');ab.innerHTML='';
+  U.org.acts.forEach(a=>{
+    const tr=document.createElement('tr');
+    const ins=U.org.inscritos.filter(i=>i.taller===a.name).length;
+    tr.innerHTML=`<td>${a.emoji} ${a.name}</td><td>${a.cat}</td><td>${ins}</td><td>${a.cupos}</td><td><span class="sb sg">Activa</span></td><td><button class="btn btn-sm btn-g" onclick="toast('Edición próximamente')">Editar</button></td>`;
+    ab.appendChild(tr);
+  });
+  // Inscritos
+  buildOrgIns();buildOrgPagos();updateOrgMetrics();
+  // Msg ref
+  if(U.org.acts.length){
+    document.getElementById('org-act-ref').textContent=U.org.acts[0].name;
+    document.getElementById('org-act-ref2').textContent=U.org.acts[0].name;
+  }
+}
+function buildOrgIns(){
+  const b=document.getElementById('org-ins-body');b.innerHTML='';
+  if(!U.org.inscritos.length){b.innerHTML='<tr><td colspan="5" style="text-align:center;color:var(--mu);padding:1rem">Aún sin inscritos. Los verás aquí cuando alguien se inscriba.</td></tr>';return}
+  U.org.inscritos.forEach(r=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td>${r.name}</td><td>${r.taller}</td><td>${r.fecha}</td><td>${r.wa||'—'}</td><td><span class="sb ${r.estado==='Pagado'?'sg':r.estado==='Pendiente'?'sy':'sr'}">${r.estado}</span></td>`;
+    b.appendChild(tr);
+  });
+}
+function buildOrgPagos(){
+  const b=document.getElementById('org-pagos-body');b.innerHTML='';
+  const cobrado=U.org.pagos.filter(p=>p.estado==='Pagado').reduce((s,p)=>s+p.monto,0);
+  const pend=U.org.pagos.filter(p=>p.estado==='Pendiente').reduce((s,p)=>s+p.monto,0);
+  document.getElementById('p-cobrado').textContent='$'+cobrado.toLocaleString('es-CL');
+  document.getElementById('p-pend').textContent='$'+pend.toLocaleString('es-CL');
+  if(!U.org.pagos.length){b.innerHTML='<tr><td colspan="5" style="text-align:center;color:var(--mu);padding:1rem">Sin transacciones aún.</td></tr>';return}
+  U.org.pagos.forEach(p=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td>${p.name}</td><td>${p.taller}</td><td>$${p.monto.toLocaleString('es-CL')}</td><td>${p.fecha}</td><td><span class="sb ${p.estado==='Pagado'?'sg':'sy'}">${p.estado}</span></td>`;
+    b.appendChild(tr);
+  });
+}
+function updateOrgMetrics(){
+  const v=Object.values(U.actViews).reduce((a,b)=>a+b,0);
+  const e=U.an.enrolls;const f=U.favs.size;
+  if(document.getElementById('om-v')) document.getElementById('om-v').textContent=v;
+  if(document.getElementById('om-e')) document.getElementById('om-e').textContent=e;
+  if(document.getElementById('om-cvr')) document.getElementById('om-cvr').textContent=v>0?Math.round(e/v*100)+'%':'0%';
+  if(document.getElementById('om-f')) document.getElementById('om-f').textContent=f;
+  if(document.getElementById('org-top-act')){
+    const topId=Object.entries(U.actViews).sort((a,b)=>b[1]-a[1])[0];
+    const topAct=topId?ACTS.find(a=>a.id==topId[0]):null;
+    document.getElementById('org-top-act').textContent=topAct?`${topAct.emoji} ${topAct.name} — ${topAct.rating}⭐ · ${topId[1]} vistas`:'Sin datos aún.';
+  }
+}
+function saveNewAct(){toast('Actividad guardada ✓');document.getElementById('new-act-f').style.display='none'}
+function orgTab(t){
+  document.querySelectorAll('.ot-pane').forEach(p=>p.classList.remove('on'));
+  document.getElementById('op-'+t).classList.add('on');
+  document.querySelectorAll('.ot').forEach((b,i)=>{b.classList.toggle('on',['dash','acts','inscritos','pagos','msgs','metricas'][i]===t)});
+  document.querySelectorAll('#nav-org-r .ntab').forEach((b,i)=>{b.classList.toggle('on',['dash','acts','inscritos','pagos','msgs','metricas'][i]===t)});
+  if(t==='metricas') updateOrgMetrics();
+  if(t==='inscritos') buildOrgIns();
+  if(t==='pagos') buildOrgPagos();
+}
+
+// ===== USER HOME =====
+function userTab(t){
+  ['cat','favs','map','tests'].forEach(x=>document.getElementById('htab-'+x).style.display=x===t?'block':'none');
+  document.querySelectorAll('#nav-user-r .ntab').forEach((b,i)=>{b.classList.toggle('on',['cat','favs','map','tests'][i]===t)});
+  if(t==='favs') buildFavs();
+  if(t==='map') buildMap();
+  if(t==='tests') buildTestimonios();
+}
+function buildRec(){
+  const rs=document.getElementById('rec-scroll');rs.innerHTML='';
+  const recs=ACTS.filter(a=>U.interests.length===0||U.interests.some(i=>a.cat===i||i==='deporte'&&a.cat==='deporte'||i==='arte'&&a.cat==='arte'||i==='bienestar'&&a.cat==='bienestar')).slice(0,6);
+  const list=recs.length?recs:ACTS.slice(0,6);
+  list.forEach(a=>{
+    const d=document.createElement('div');d.className='rec-card';
+    d.innerHTML=`<div class="rc-img" style="background:${a.bg}">${a.emoji}${a.free?'<span style="position:absolute;top:5px;left:5px;background:#D1FAE5;color:#065F46;font-size:9px;font-weight:700;padding:2px 6px;border-radius:6px">Gratis</span>':''}</div><div class="rc-body"><div class="rc-name">${a.name}</div><div class="rc-meta">${a.loc} · ${a.level}</div><div class="rc-price">$${Math.round(a.price/1000)}k</div></div>`;
+    d.onclick=()=>openActModal(a.id);rs.appendChild(d);
+  });
+}
+let catFilter='todo',fP='',fM='',fN='',fT='';
+function buildCatalog(list){
+  const g=document.getElementById('cat-grid');if(!g) return;g.innerHTML='';
+  list.forEach(a=>g.appendChild(makeCard(a)));
+  document.getElementById('cat-count').textContent=list.length+' actividades';
+}
+function makeCard(a){
+  const fav=U.favs.has(a.id);
+  const d=document.createElement('div');d.className='ac';
+  d.innerHTML=`<button class="fav-btn${fav?' on':''}" onclick="event.stopPropagation();togFav(${a.id},this)">${fav?'❤️':'🤍'}</button>
+    <div class="ac-img" style="background:${a.bg}"><span>${a.emoji}</span>
+      <div class="ac-bads">${a.free?'<span class="bd bd-free">1ª gratis</span>':''}<span class="bd bd-cat">${a.cat}</span><span class="bd bd-mod">${a.tipo}</span></div>
+    </div>
+    <div class="ac-body"><div class="ac-name">${a.name}</div><div class="ac-org">con ${a.org}</div>
+      <div class="ac-metas"><span class="meta">📍 ${a.loc}</span><span class="meta">🎯 ${a.level}</span><span class="meta">⏱ ${a.dur}</span><span class="meta">${a.mod==='online'?'💻 Online':'🏢 Presencial'}</span></div>
+      <div class="ac-foot"><div class="price">$${Math.round(a.price/1000)}k/mes</div><div><span class="stars">★★★★★</span><span style="font-size:10px;color:var(--mu)"> ${a.rating}(${a.reviews})</span></div><span class="cupos-lbl">${a.cupos} cupos</span></div>
+    </div>`;
+  d.onclick=()=>openActModal(a.id);return d;
+}
+function filterCat(cat,btn){
+  catFilter=cat;
+  if(btn){document.querySelectorAll('.chip').forEach(c=>c.classList.remove('on'));btn.classList.add('on')}
+  applyF();
+}
+function applyF(){
+  fP=document.getElementById('f-p')?document.getElementById('f-p').value:'';
+  fM=document.getElementById('f-m')?document.getElementById('f-m').value:'';
+  fN=document.getElementById('f-n')?document.getElementById('f-n').value:'';
+  fT=document.getElementById('f-t')?document.getElementById('f-t').value:'';
+  const list=ACTS.filter(a=>{
+    if(catFilter!=='todo'&&a.cat!==catFilter) return false;
+    if(fM&&a.mod!==fM) return false;
+    if(fN&&a.level!==fN&&a.level!=='Todos') return false;
+    if(fT&&a.tipo!==fT&&!a.tipo.includes(fT)) return false;
+    if(fP==='cheap'&&a.price>25000) return false;
+    if(fP==='mid'&&(a.price<25000||a.price>45000)) return false;
+    if(fP==='high'&&a.price<45000) return false;
+    return true;
+  });
+  buildCatalog(list);
+}
+function togFav(id,btn){
+  if(U.favs.has(id)){U.favs.delete(id);btn.textContent='🤍';btn.classList.remove('on')}
+  else{
+    U.favs.add(id);btn.textContent='❤️';btn.classList.add('on');
+    U.an.favs++;U.actFavs[id]=(U.actFavs[id]||0)+1;
+    const a=ACTS.find(x=>x.id===id);
+    dbSave('favoritos',{user_email:U.mail||'anonimo',actividad_id:id,actividad_nombre:a?a.name:''});
+    dbSave('eventos',{tipo:'favorito',descripcion:`Favorito: ${a?a.name:'ID '+id}`,metadata:{actividad_id:id,user:U.mail}});
+    evt('❤️','dc','Favorito: '+(a?a.name:''));
+  }
+}
+function buildFavs(){
+  const g=document.getElementById('favs-grid');g.innerHTML='';
+  const fa=ACTS.filter(a=>U.favs.has(a.id));
+  document.getElementById('favs-empty').style.display=fa.length?'none':'block';
+  fa.forEach(a=>g.appendChild(makeCard(a)));
+}
+function buildMap(){
+  const mp=document.getElementById('map-pins');if(!mp) return;mp.innerHTML='';
+  PINS.forEach(p=>{
+    const a=ACTS.find(x=>x.id===p.id);if(!a) return;
+    const pin=document.createElement('div');pin.className='pin';
+    pin.style.left=p.x;pin.style.top=p.y;
+    pin.innerHTML=`${a.emoji}<div class="pin-lbl">${a.name}</div>`;
+    pin.onclick=()=>openActModal(a.id);mp.appendChild(pin);
+  });
+  const mg=document.getElementById('map-grid');if(mg){mg.innerHTML='';ACTS.forEach(a=>mg.appendChild(makeCard(a)))}
+}
+function buildTestimonios(){
+  const g=document.getElementById('test-grid');if(!g) return;g.innerHTML='';
+  TESTS.forEach((t,i)=>{
+    const d=document.createElement('div');d.className='tc';
+    d.innerHTML=`<div class="tc-top"><div class="tc-av">${t.e}</div><div><div class="tc-nm">${t.n}</div><div class="tc-ac">${t.act}</div></div><div style="margin-left:auto;color:#FBBF24;font-size:10px">★★★★★</div></div><p class="tc-txt">"${t.t}"</p><button class="btn-cu" onclick="togMsg(${i})">💬 Contactar a ${t.n}</button><div class="umsg" id="um-${i}"><textarea placeholder="Escribe tu mensaje..."></textarea><button onclick="sendMsg(${i},'${t.n}')">Enviar →</button></div>`;
+    g.appendChild(d);
+  });
+}
+function togMsg(i){
+  const box=document.getElementById('um-'+i);
+  box.classList.toggle('on');
+  if(box.classList.contains('on')){
+    U.an.chats++;
+    const t=TESTS[i];
+    evt('💬','dc',`Vista reseña: ${t.n} — ${t.act}`);
+    dbSave('eventos',{
+      tipo:'vista_resena',
+      descripcion:`Contacto reseña: ${t.n} (${t.act})`,
+      metadata:{testimonio_index:i, nombre:t.n, actividad:t.act, user:U.mail||'anonimo'}
+    });
+  }
+}
+function sendMsg(i,n){
+  document.getElementById('um-'+i).classList.remove('on');
+  const t=TESTS[i];
+  const msg=document.querySelector(`#um-${i} textarea`)?.value||'';
+  dbSave('eventos',{
+    tipo:'mensaje_resena',
+    descripcion:`Mensaje enviado a: ${n} (${t.act})`,
+    metadata:{destinatario:n, actividad:t.act, mensaje:msg.slice(0,200), user:U.mail||'anonimo'}
+  });
+  toast('Mensaje enviado a '+n);
+}
+
+// ===== ACT MODAL =====
+function openActModal(id){
+  const a=ACTS.find(x=>x.id===id);
+  U.actViews[id]=(U.actViews[id]||0)+1;U.an.detailViews++;
+  evt('👁','dp','Vista actividad: '+a.name);
+  dbSave('eventos',{tipo:'vista_actividad',descripcion:`Vista: ${a.name}`,metadata:{actividad_id:id,user:U.mail||'anonimo'}});
+  const revHTML=a.revs.map(r=>`<div class="rev"><div class="rev-top"><div class="rev-av">${r.emoji}</div><div><div class="rev-name">${r.n}</div><div style="color:#FBBF24;font-size:10px">★★★★★</div></div></div><div class="rev-txt">"${r.t}"</div></div>`).join('');
+  const html=`<div class="mh"><div class="m-img" style="background:${a.bg}"><span style="font-size:5rem">${a.emoji}</span></div><button class="m-close" onclick="document.getElementById('act-ov').style.display='none'">×</button></div>
+  <div class="m-body">
+    <h2 class="m-title">${a.name}</h2>
+    <div class="m-bads">${a.free?'<span class="bd bd-free" style="font-size:11px;padding:4px 10px">✅ 1ª clase gratis</span>':''}<span class="bd bd-cat" style="font-size:11px;padding:4px 10px">${a.cat}</span><span class="bd bd-mod" style="font-size:11px;padding:4px 10px">${a.tipo}</span><span class="bd" style="background:#F3F4F6;color:#374151;font-size:11px;padding:4px 10px">📍 ${a.loc}</span><span class="bd" style="background:#F3F4F6;color:#374151;font-size:11px;padding:4px 10px">${a.mod==='online'?'💻 Online':'🏢 Presencial'}</span></div>
+    <div class="msec"><h4>Galería</h4><div class="gal">${[1,2,3,4].map(()=>`<div class="gi" style="background:${a.bg}">${a.emoji}</div>`).join('')}</div></div>
+    <div class="info-row"><div class="ir"><strong>${a.dur}</strong><span>Duración</span></div><div class="ir"><strong>${a.level}</strong><span>Nivel</span></div><div class="ir"><strong style="color:var(--g)">${a.cupos}</strong><span>Cupos libres</span></div></div>
+    <div class="msec"><h4>Descripción</h4><p>${a.desc}</p></div>
+    <div class="msec"><h4>Beneficios</h4><div class="ben-list">${a.benefits.map(b=>`<div class="ben-item">${b}</div>`).join('')}</div></div>
+    <div class="msec"><h4>Horarios</h4><div class="hor-grid">${a.horarios.map(h=>`<div class="hc">🕐 ${h}</div>`).join('')}</div></div>
+    <div class="msec"><h4>Ubicación</h4><div class="map-ph">🗺 ${a.loc}</div></div>
+    <div class="msec"><h4>El organizador</h4>
+      <div class="org-blk"><div class="org-av">${a.orgEmoji}</div>
+        <div><div style="font-weight:700;font-size:.9rem;margin-bottom:2px">${a.org}</div><div style="font-size:12px;color:var(--mu);line-height:1.5;margin-bottom:5px">${a.orgBio}</div>
+          <div class="org-links"><a class="ol" href="mailto:${a.orgMail}">${a.orgMail}</a><button class="ol" onclick="toast('WhatsApp: ${a.orgWa}')">WhatsApp</button><button class="ol">${a.orgIG}</button><button class="ol" onclick="toast('Mensaje enviado a ${a.org}')">Contactar</button></div>
+        </div>
+      </div>
+    </div>
+    ${revHTML?`<div class="msec"><h4>Reseñas (${a.reviews})</h4><div class="rev-list">${revHTML}</div></div>`:''}
+    <div class="mfoot">
+      <div class="mprice">$${Math.round(a.price/1000)}k<span style="font-size:13px;font-weight:400;color:var(--mu)">/mes</span></div>
+      <button class="btn-enroll" onclick="openEnroll(${a.id})">${a.free?'Inscribirme (1ª gratis)':'Inscribirme'}</button>
+    </div>
+  </div>`;
+  document.getElementById('act-modal').innerHTML=html;
+  document.getElementById('act-ov').style.display='flex';
+  updateAdmin();
+}
+function closeOv(id,e){if(e.target===document.getElementById(id)) document.getElementById(id).style.display='none'}
+
+// ===== ENROLL =====
+function openEnroll(id,isWait=false){
+  U.currentEnroll=id;U.isWait=isWait;
+  const a=id?ACTS.find(x=>x.id===id):null;
+  document.getElementById('en-title').textContent=isWait?'Lista de espera':'Inscripción'+(a?': '+a.name:'');
+  document.getElementById('en-sub').textContent=isWait?'Te avisamos cuando haya lugar disponible.':'Completa tus datos, te contactamos por WhatsApp.';
+  document.getElementById('en-ok').style.display='none';
+  // Pre-fill from profile
+  if(U.name) document.getElementById('en-nom').value=U.name;
+  if(U.mail) document.getElementById('en-mail').value=U.mail;
+  if(U.wa) document.getElementById('en-wa').value=U.wa;
+  document.getElementById('en-ov').style.display='flex';
+  U.an.formStarts++;evt('📋','dc','Inicio inscripción: '+(a?a.name:'General'));
+}
+function submitEnroll(){
+  const mail=document.getElementById('en-mail').value.trim();
+  if(!mail){toast('Ingresa tu email');return}
+  const a=U.currentEnroll?ACTS.find(x=>x.id===U.currentEnroll):null;
+  const lead={name:document.getElementById('en-nom').value+' '+document.getElementById('en-ape').value,email:mail,wa:document.getElementById('en-wa').value,edad:document.getElementById('en-edad').value,canal:document.getElementById('en-canal').value,interest:a?a.name:'General',date:new Date().toLocaleDateString('es-CL')};
+  if(U.isWait){
+    U.waitlist.push({name:lead.name,email:mail,zona:U.zona,date:lead.date});
+    dbSave('lista_espera',{nombre:lead.name,email:mail,zona:U.zona});
+  } else{
+    U.leads.push(lead);U.an.enrolls++;
+    if(U.currentEnroll) U.actEnrolls[U.currentEnroll]=(U.actEnrolls[U.currentEnroll]||0)+1;
+    // Save to Supabase
+    dbSave('inscripciones',{
+      nombre:document.getElementById('en-nom').value,
+      apellido:document.getElementById('en-ape').value,
+      email:mail,
+      whatsapp:lead.wa,
+      edad:lead.edad,
+      canal:lead.canal,
+      actividad:a?a.name:'General',
+      actividad_id:U.currentEnroll||null,
+      estado:'pendiente'
+    });
+    dbSave('eventos',{tipo:'inscripcion',descripcion:`Inscripción: ${lead.name||mail} → ${a?a.name:'General'}`,metadata:{canal:lead.canal,actividad_id:U.currentEnroll}});
+    // Add to org inscritos if org owns the act
+    if(U.role==='org'||U.org.acts.some(x=>x.id===U.currentEnroll)){
+      const orgAct=U.org.acts.find(x=>x.id===U.currentEnroll)||a;
+      if(orgAct){
+        U.org.inscritos.push({name:lead.name,taller:orgAct.name,fecha:new Date().toLocaleDateString('es-CL'),wa:lead.wa,estado:'Pendiente'});
+        U.org.pagos.push({name:lead.name,taller:orgAct.name,monto:orgAct.price,fecha:new Date().toLocaleDateString('es-CL'),estado:'Pendiente'});
+      }
+    }
+    evt('🎉','dg','Inscripción: '+(a?a.name:lead.email));
+  }
+  document.getElementById('en-ok').style.display='block';
+  setTimeout(()=>document.getElementById('en-ov').style.display='none',2300);
+  updateAdmin();updateOrgMetrics();
+}
+
+// ===== CHATBOT =====
+function toggleChat(){document.getElementById('cpanel').classList.toggle('vis');if(document.getElementById('cpanel').classList.contains('vis')){U.an.chats++;evt('💬','dc','Chatbot abierto')}}
+async function sendChat(){
+  const inp=document.getElementById('cinput');const msg=inp.value.trim();if(!msg) return;
+  addCM(msg,'user');inp.value='';
+  const t=addCM('Escribiendo...','bot typ');
+  const cat=ACTS.map(a=>`- ${a.name} (${a.cat}, $${Math.round(a.price/1000)}k, ${a.level}, ${a.loc})`).join('\n');
+  const sys=`Eres Fomito, asistente de FOMO. Responde en español chileno, amable y breve (max 2 frases). Catálogo:\n${cat}`;
+  try{
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:200,system:sys,messages:[{role:'user',content:msg}]})});
+    const d=await r.json();t.remove();addCM(d.content?.[0]?.text||'No pude responder ahora.','bot');
+  }catch(e){t.remove();addCM('Sin conexión. Intenta de nuevo.','bot')}
+}
+function addCM(text,cls){const m=document.createElement('div');m.className='cm '+cls;m.textContent=text;const msgs=document.getElementById('cmsgs');msgs.appendChild(m);msgs.scrollTop=msgs.scrollHeight;return m}
+
+// ===== ADMIN =====
+function launchAdmin(){
+  go('s-admin');
+  setNavRole('admin');
+  document.getElementById('cfab').classList.remove('on');
+  loadAdminData();
+}
+
+async function loadAdminData(){
+  // Load all tables from Supabase in parallel
+  toast('Cargando datos...');
+  const [usuarios, organizadores, inscripciones, espera, eventos, favoritos] = await Promise.all([
+    dbLoad('usuarios'), dbLoad('organizadores'), dbLoad('inscripciones'),
+    dbLoad('lista_espera'), dbLoad('eventos'), dbLoad('favoritos')
+  ]);
+  // Merge DB data with local state
+  U.leads = inscripciones.map(i=>({
+    name:(i.nombre||'')+' '+(i.apellido||''),
+    email:i.email, wa:i.whatsapp, canal:i.canal,
+    interest:i.actividad, date:new Date(i.created_at).toLocaleDateString('es-CL')
+  }));
+  U.waitlist = espera.map(e=>({
+    name:e.nombre, email:e.email, zona:e.zona,
+    date:new Date(e.created_at).toLocaleDateString('es-CL')
+  }));
+  U.an.enrolls = inscripciones.length;
+  U.an.quizDone = usuarios.length;
+  U.events = eventos.slice(0,50).map(e=>({
+    icon:'⚡', cls:'dp', msg:e.descripcion,
+    time:new Date(e.created_at).toLocaleTimeString('es-CL',{hour:'2-digit',minute:'2-digit'})
+  }));
+  // Count activity views from events
+  eventos.filter(e=>e.tipo==='vista_actividad').forEach(e=>{
+    const id=e.metadata?.actividad_id;
+    if(id) U.actViews[id]=(U.actViews[id]||0)+1;
+  });
+  // Count favs
+  favoritos.forEach(f=>{if(f.actividad_id) U.actFavs[f.actividad_id]=(U.actFavs[f.actividad_id]||0)+1});
+  toast(`✓ ${inscripciones.length} inscripciones · ${usuarios.length} usuarios · ${espera.length} en espera`);
+  updateAdmin();
+}
+function admTab(t){
+  document.querySelectorAll('.at-pane').forEach(p=>p.classList.remove('on'));
+  document.getElementById('ap-'+t).classList.add('on');
+  document.querySelectorAll('.at').forEach((b,i)=>{b.classList.toggle('on',['overview','funnel','leads','acts','eventos','waitlist'][i]===t)});
+  updateAdmin();
+}
+function updateAdmin(){
+  if(document.getElementById('s-admin').classList.contains('on')||true){
+    const an=U.an;
+    const elapsed=Math.round((Date.now()-an.start)/1000);
+    const totalEmails=U.leads.length+U.waitlist.length;
+    // KPIs
+    const kdata=[{l:'Usuarios registrados',v:an.quizDone},{l:'Organizadores',v:U.role==='org'?1:0},{l:'Actividades publicadas',v:ACTS.length+(U.org.acts.length)},{l:'Leads capturados',v:totalEmails},{l:'Inscripciones',v:an.enrolls},{l:'Conversión',v:an.visits>0?Math.round(an.enrolls/an.visits*100)+'%':'0%'},{l:'Favoritos',v:U.favs.size},{l:'Vista actividades',v:an.detailViews},{l:'Chatbot',v:an.chats},{l:'Tiempo sesión',v:elapsed+'s'}];
+    const kg=document.getElementById('adm-kpi');if(kg){kg.innerHTML='';kdata.forEach(k=>{const d=document.createElement('div');d.className='akc';d.innerHTML=`<div class="ak-l">${k.l}</div><div class="ak-v">${k.v}</div>`;kg.appendChild(d)})}
+    // Funnel
+    const fg=document.getElementById('funnel-g');if(fg){
+      fg.innerHTML='';
+      [{l:'Visitas',v:an.visits},{l:'Quiz completo',v:an.quizDone},{l:'Vieron actividad',v:an.detailViews},{l:'Inscripciones',v:an.enrolls}].forEach((f,i)=>{
+        const d=document.createElement('div');d.className='fs';const rate=i===0?'100%':(an.visits>0?Math.round(f.v/an.visits*100)+'%':'0%');
+        d.innerHTML=`<div class="fn">${f.v}</div><div class="fl">${f.l}</div><div class="fr">${rate}</div>`;fg.appendChild(d);
+      });
+    }
+    const at=document.getElementById('avg-time');if(at) at.textContent=elapsed+'s';
+    // Conv bars
+    const cb=document.getElementById('conv-bars');if(cb){
+      cb.innerHTML='';
+      [{l:'Visitas → Quiz',n:an.quizDone,d:an.visits},{l:'Quiz → Actividad',n:an.detailViews,d:an.quizDone},{l:'Actividad → Inscripción',n:an.enrolls,d:an.detailViews}].forEach(s=>{
+        const pct=s.d>0?Math.round(s.n/s.d*100):0;
+        const div=document.createElement('div');
+        div.innerHTML=`<div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px"><span style="color:var(--mu)">${s.l}</span><span style="font-weight:600;color:var(--p)">${pct}%</span></div><div style="background:var(--bd);border-radius:4px;height:7px;overflow:hidden"><div style="background:var(--p);height:100%;width:${pct}%;border-radius:4px"></div></div>`;
+        cb.appendChild(div);
+      });
+    }
+    // Cat bars
+    const catb=document.getElementById('cat-bars');if(catb){
+      const cats={bienestar:2,deporte:1,arte:3,outdoor:2,social:1};catb.innerHTML='';
+      Object.entries(cats).forEach(([c,v])=>{const div=document.createElement('div');div.innerHTML=`<div style="display:flex;align-items:center;gap:9px;margin-bottom:5px"><span style="font-size:12px;min-width:75px;color:var(--mu)">${c}</span><div style="flex:1;background:var(--bd);border-radius:3px;height:8px;overflow:hidden"><div style="background:var(--p);height:100%;width:${v/3*100}%;border-radius:3px"></div></div><span style="font-size:12px;min-width:16px">${v}</span></div>`;catb.appendChild(div)});
+    }
+    // Leads
+    const lb=document.getElementById('leads-body');if(lb){
+      lb.innerHTML='';U.leads.forEach(l=>{const tr=document.createElement('tr');tr.innerHTML=`<td>${l.name||'—'}</td><td>${l.email}</td><td>${l.wa||'—'}</td><td>${l.canal||'—'}</td><td>${l.interest}</td><td>${l.date}</td>`;lb.appendChild(tr)});
+      if(!U.leads.length) lb.innerHTML='<tr><td colspan="6" style="text-align:center;color:var(--mu);padding:1rem">Sin leads. Inscríbete como usuario para generar datos.</td></tr>';
+      const lc=document.getElementById('leads-c');if(lc) lc.textContent=U.leads.length;
+    }
+    // Acts admin
+    const ab=document.getElementById('acts-body');if(ab){
+      ab.innerHTML='';ACTS.forEach(a=>{const v=U.actViews[a.id]||0;const e=U.actEnrolls[a.id]||0;const f=U.actFavs[a.id]||0;const tr=document.createElement('tr');tr.innerHTML=`<td>${a.emoji} ${a.name}</td><td>${a.cat}</td><td>${v}</td><td>${f}</td><td>${e}</td><td>${v>0?Math.round(e/v*100):0}%</td>`;ab.appendChild(tr)});
+    }
+    // Org rank
+    const or=document.getElementById('org-rank');if(or){
+      or.innerHTML='<tr><td>Catalina Ramírez</td><td>3</td><td>34</td><td>⭐ 4.9</td></tr><tr><td>Rodrigo Pinto</td><td>1</td><td>89</td><td>⭐ 4.7</td></tr><tr><td>Carlos & Diana</td><td>1</td><td>63</td><td>⭐ 4.8</td></tr>';
+      if(U.org.acts.length) or.innerHTML=`<tr><td>${U.org.name||'Organizador'}</td><td>${U.org.acts.length}</td><td>${U.org.inscritos.length}</td><td>⭐ —</td></tr>`+or.innerHTML;
+    }
+    // Events
+    const ef=document.getElementById('ev-feed');if(ef){ef.innerHTML='';[...U.events].reverse().slice(0,20).forEach(e=>{const d=document.createElement('div');d.className='ev';d.innerHTML=`<div class="ev-dot ${e.cls}"></div><span>${e.msg}</span><span style="margin-left:auto;color:var(--mu);font-size:10px">${e.time}</span>`;ef.appendChild(d)})}
+    // Waitlist
+    const wb=document.getElementById('wl-body');if(wb){
+      wb.innerHTML='';U.waitlist.forEach((w,i)=>{const tr=document.createElement('tr');tr.innerHTML=`<td>${i+1}</td><td>${w.name||'—'}</td><td>${w.email}</td><td>${w.zona||'—'}</td><td>${w.date}</td>`;wb.appendChild(tr)});
+      if(!U.waitlist.length) wb.innerHTML='<tr><td colspan="5" style="text-align:center;color:var(--mu);padding:1rem">Sin registros aún.</td></tr>';
+      const wc=document.getElementById('wl-c');if(wc) wc.textContent=U.waitlist.length;
+    }
+  }
+}
+function searchLeads(q){document.querySelectorAll('#leads-body tr').forEach(r=>{r.style.display=r.textContent.toLowerCase().includes(q.toLowerCase())?'':'none'})}
+
+// ===== EVENTS =====
+function evt(icon,cls,msg){U.events.push({icon,cls,msg,time:new Date().toLocaleTimeString('es-CL',{hour:'2-digit',minute:'2-digit'})})}
+
+// ===== NAV ROLE =====
+function setNavRole(role){
+  document.getElementById('app-nav').style.display=role?'flex':'none';
+  document.getElementById('nav-user-r').style.display=role==='user'?'flex':'none';
+  document.getElementById('nav-org-r').style.display=role==='org'?'flex':'none';
+  document.getElementById('nav-adm-r').style.display=role==='admin'?'flex':'none';
+}
+
+// ===== EXPORT =====
+function exportCSV(){
+  const h='Nombre,Email,WhatsApp,Canal,Interés,Fecha';
+  const r=U.leads.map(l=>`"${l.name}","${l.email}","${l.wa}","${l.canal}","${l.interest}","${l.date}"`);
+  dl([h,...r].join('\n'),'fomo_leads.csv','text/csv');toast('CSV exportado ✓');
+}
+function exportExcel(){
+  let html='<table><tr><th>Nombre</th><th>Email</th><th>WhatsApp</th><th>Canal</th><th>Interés</th><th>Fecha</th><th>Visitas totales</th><th>Inscripciones</th></tr>';
+  U.leads.forEach(l=>{html+=`<tr><td>${l.name}</td><td>${l.email}</td><td>${l.wa}</td><td>${l.canal}</td><td>${l.interest}</td><td>${l.date}</td><td>${U.an.visits}</td><td>${U.an.enrolls}</td></tr>`});
+  if(!U.leads.length) html+='<tr><td colspan="8">Sin leads aún</td></tr>';html+='</table>';
+  dl('\ufeff'+html,'fomo_dashboard.xls','application/vnd.ms-excel');toast('Excel exportado ✓');
+}
+function dl(c,n,t){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([c],{type:t}));a.download=n;a.click()}
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.style.display='block';setTimeout(()=>t.style.display='none',2800)}
+
+// Track page visit
+U.an.visits=1;
+evt('👋','dg','Plataforma iniciada');
+dbSave('eventos',{tipo:'visita',descripcion:'Nueva visita a FOMO',metadata:{ua:navigator.userAgent.slice(0,80)}});
+setInterval(updateAdmin,8000);
+document.addEventListener('keydown',e=>{if(e.ctrlKey&&e.shiftKey&&e.key==='A'){e.preventDefault();launchAdmin()}});
+</script>
+</body>
+</html>
